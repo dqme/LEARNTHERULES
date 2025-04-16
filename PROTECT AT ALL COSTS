@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROTECT AT ALL COSTS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Define CSS variables for easier control */
+            --bg-color-start: #450a0a;
+            --bg-color-end: #7f1d1d;
+            --crack-color: rgba(0, 0, 0, 0.3);
+            --crack-intensity: 1;
+            --transition-duration: 2s; /* Slower transition */
+            --door-anim-duration: 1.5s; /* Steel door animation duration */
+            --shield-appear-delay: calc(var(--door-anim-duration) + 0.2s); /* Shield appears after door */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #F3F4F6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Vertical centering */
+            align-items: center; /* Horizontal centering */
+            overflow: hidden;
+            padding: 1rem;
+            background: linear-gradient(45deg, var(--bg-color-start), var(--bg-color-end));
+            background-size: 400% 400%;
+            position: relative;
+            animation: gradientShift 15s ease infinite alternate; /* Slower gradient shift */
+            transition: background 0.5s ease-out; /* Smooth transition for trapped state */
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* Background cracks */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                radial-gradient(var(--crack-color) calc(1px * var(--crack-intensity)), transparent calc(1px * var(--crack-intensity))),
+                radial-gradient(var(--crack-color) calc(1px * var(--crack-intensity)), transparent calc(1px * var(--crack-intensity)));
+            background-size: calc(50px * (2 - var(--crack-intensity))) calc(50px * (2 - var(--crack-intensity))),
+                             calc(50px * (2 - var(--crack-intensity))) calc(50px * (2 - var(--crack-intensity)));
+            background-position: 0 0, 25px 25px;
+            opacity: 0.4;
+            animation: pulseCracks 4s infinite ease-in-out alternate; /* Slower pulse */
+            transition: background-size 1s ease-out, opacity 1s ease-out;
+            z-index: -1;
+        }
+
+        @keyframes pulseCracks {
+            from { opacity: 0.2; }
+            to { opacity: 0.5; }
+        }
+
+        /* Trapped state styles for body background */
+        body.trapped-state {
+            --crack-intensity: 1.6;
+            --bg-color-start: #7f1d1d;
+            --bg-color-end: #450a0a;
+        }
+        body.trapped-state::before {
+             opacity: 0.7;
+             /* Animation will be stopped by .locked state */
+        }
+        /* Lock background crack animation */
+        body.locked::before {
+            animation-play-state: paused; /* Stop pulsing */
+            opacity: 0.7; /* Keep final opacity */
+        }
+
+        /* Description paragraph styling */
+        .description-paragraph {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            color: #93c5fd;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            transition: color var(--transition-duration) ease-out; /* Slower color transition */
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+        .description-paragraph.trapped {
+            color: #f87171;
+            animation: jitterText 0.2s linear infinite; /* Start jitter */
+        }
+        /* Lock description jitter */
+        .description-paragraph.locked {
+            animation: none; /* Stop jittering */
+            color: #f87171; /* Keep final color */
+        }
+        @keyframes jitterText { /* Keep jitter subtle */
+            0%, 100% { transform: translate(0.5px, -0.5px); }
+            50% { transform: translate(-0.5px, 0.5px); }
+        }
+
+        /* Visual text container - ensure centering */
+         .visual-element {
+            display: flex;
+            flex-grow: 1; /* Takes available space */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            width: 100%;
+            position: relative; /* For positioning shield */
+         }
+
+        /* Main visual text styling */
+        .protect-text {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 5rem;
+            text-align: center;
+            line-height: 1.1;
+            color: #60a5fa;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+            margin-top: 1rem; /* Adjusted margin */
+            position: relative; /* For pseudo-elements */
+            z-index: 1;
+            animation: breathe 4s infinite ease-in-out; /* Slower breathe */
+            transition: color var(--transition-duration) ease-out, opacity 0.5s ease-out; /* Smooth color change */
+        }
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); } /* More subtle breathe */
+        }
+
+        /* Trapped state for visual text */
+        .protect-text.trapped {
+            color: #dc2626;
+            animation: none; /* Stop breathing */
+            /* Intense shake will be added and removed via .locked */
+        }
+         /* Add shake only when trapped but not yet locked */
+        .protect-text.trapped:not(.locked) {
+             animation: shakeIntense 0.1s infinite linear alternate;
+        }
+        /* Hide text when locked (behind door) */
+         .protect-text.locked {
+             opacity: 0;
+             animation: none; /* Ensure shake stops */
+         }
+
+        /* Steel Door Effect using Pseudo-elements */
+        .protect-text::before,
+        .protect-text::after {
+            content: '';
+            position: absolute;
+            top: -15%; height: 130%; /* Ensure full coverage */
+            width: 51%; /* Overlap slightly in center */
+            background: linear-gradient(to bottom right, #a0aec0, #4a5568); /* Steel gradient */
+            border: 1px solid #2d3748;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 3px 3px 10px rgba(0,0,0,0.3);
+            z-index: 3; /* Above text */
+            transform: translateX(-100%); /* Start off-screen */
+            transition: transform var(--door-anim-duration) ease-in-out; /* Door closing animation */
+        }
+        .protect-text::after {
+            left: auto; /* Override default left */
+            right: 0;
+            transform: translateX(100%); /* Start off-screen right */
+        }
+
+        /* Trigger door closing animation */
+        .protect-text.trapped::before {
+            transform: translateX(0%);
+        }
+        .protect-text.trapped::after {
+            transform: translateX(0%);
+        }
+
+
+        @keyframes shakeIntense { /* Keep shake intense */
+            0% { transform: translate(2px, 1.5px) rotate(0.5deg); }
+            25% { transform: translate(-1.5px, -2px) rotate(-0.5deg); }
+            50% { transform: translate(1.5px, 2px) rotate(0.5deg); }
+            75% { transform: translate(-2px, -1.5px) rotate(-0.5deg); }
+            100% { transform: translate(2px, 1.5px) rotate(0.5deg); }
+        }
+
+        /* Broken Shield SVG Styling */
+        .broken-shield {
+            position: absolute;
+            width: 100px; /* Adjust size */
+            height: 120px; /* Adjust size */
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.5); /* Start small and centered */
+            z-index: 4; /* Above the door */
+            opacity: 0;
+            pointer-events: none; /* Ignore mouse */
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+        .broken-shield.show-shield {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1); /* Scale up to final size */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .protect-text { font-size: 3.5rem; }
+            .description-paragraph { font-size: 1rem; }
+            .broken-shield { width: 80px; height: 100px; }
+        }
+        @media (max-width: 480px) {
+            .protect-text { font-size: 2.5rem; }
+            .description-paragraph { font-size: 0.9rem; }
+            .broken-shield { width: 60px; height: 80px; }
+        }
+    </style>
+</head>
+<body> <div class="description-wrapper max-w-3xl text-center mb-10 px-4 mx-auto">
+        <p id="descriptionText" class="description-paragraph text-lg md:text-xl leading-relaxed">
+            Rule 1 shattered against the hard reality. He met the first rush, fists blurring, instinct overriding thought. A clumsy grapple, a sharp elbow, space gained. Training flowed, turning defense into attack, the chaotic dance slowly finding his rhythm. One man down, then two. He saw an opening, a path... but a strangled cry cut through the din. The third man, the one he'd dismissed, had the girl, knife glinting against her throat. Checkmate. The rhythm broke. Trapped.
+        </p>
+    </div>
+
+    <div class="visual-element">
+        <h1 id="visualText" class="protect-text">
+            PROTECT AT ALL COSTS
+        </h1>
+        <svg id="shieldSvg" class="broken-shield" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 0 L10 25 V65 C10 95 50 120 50 120 C50 120 90 95 90 65 V25 L50 0 Z" fill="#718096" stroke="#2d3748" stroke-width="3"/>
+            <path d="M45 50 L25 75" stroke="#2d3748" stroke-width="4" stroke-linecap="round"/>
+            <path d="M55 45 L75 70 L60 95" stroke="#2d3748" stroke-width="4" stroke-linecap="round"/>
+            <path d="M50 0 L50 60 L30 80" stroke="#2d3748" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+    </div>
+
+    <script>
+        const visualTextElement = document.getElementById('visualText');
+        const descriptionTextElement = document.getElementById('descriptionText');
+        const shieldSvgElement = document.getElementById('shieldSvg');
+        const bodyElement = document.body;
+
+        const initialDelay = 4500; // Start transition after 4.5s (slower start)
+        // Get durations from CSS variables (fallback needed for browsers not supporting reading vars in JS)
+        const doorAnimDurationCss = getComputedStyle(document.documentElement).getPropertyValue('--door-anim-duration');
+        // Convert CSS time (e.g., '1.5s') to milliseconds
+        const doorAnimDurationMs = (parseFloat(doorAnimDurationCss) || 1.5) * 1000;
+
+        const lockDelay = initialDelay + doorAnimDurationMs - 300; // Lock slightly before door fully closes
+        const shieldAppearDelay = initialDelay + doorAnimDurationMs + 200; // Shield appears after door closes
+
+        // 1. Trigger the initial 'trapped' state
+        const activateTrapTimer = setTimeout(() => {
+            bodyElement.classList.add('trapped-state');
+            visualTextElement.classList.add('trapped');
+            descriptionTextElement.classList.add('trapped');
+        }, initialDelay);
+
+        // 2. Lock animations and hide text after door animation
+        const lockStateTimer = setTimeout(() => {
+            bodyElement.classList.add('locked');
+            visualTextElement.classList.add('locked');
+            descriptionTextElement.classList.add('locked');
+        }, lockDelay);
+
+        // 3. Show the broken shield after the door closes
+        const showShieldTimer = setTimeout(() => {
+            if (shieldSvgElement) {
+                shieldSvgElement.style.transitionDelay = '0s'; // Ensure transition starts now
+                shieldSvgElement.classList.add('show-shield');
+            }
+        }, shieldAppearDelay);
+
+        // Optional: Clear timeouts if the component were to be unmounted in a framework
+        // window.onunload = () => {
+        //     clearTimeout(activateTrapTimer);
+        //     clearTimeout(lockStateTimer);
+        //     clearTimeout(showShieldTimer);
+        // };
+
+    </script>
+
+</body>
+</html>
