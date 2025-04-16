@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Comic - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS for font */
+        body {
+            font-family: 'Inter', sans-serif; /* Default font */
+            background-color: #111827; /* Dark background */
+            color: #F3F4F6; /* Light text */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        /* Style for the warning icon */
+        .warning-icon {
+            width: 1.5rem; /* 24px */
+            height: 1.5rem; /* 24px */
+            display: inline-block;
+            margin-right: 0.5rem; /* Spacing */
+            vertical-align: middle; /* Align with text */
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100">
+
+    <div class="container mx-auto p-8 max-w-2xl text-center">
+
+        <div class="warning-section bg-yellow-400 border-l-4 border-yellow-600 text-yellow-900 p-4 rounded-md shadow-lg mb-12" role="alert">
+            <p class="font-bold flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="warning-icon">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                </svg>
+                Content Warning
+            </p>
+            <p>This story contains flashing lights, potentially intense graphics, and mature themes. Viewer discretion is advised.</p>
+        </div>
+
+        <div class="intro-section mb-12">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4 text-red-500">Welcome</h1>
+            <p class="text-lg md:text-xl leading-relaxed text-gray-300">
+                In a city that never sleeps, some rules are etched in adrenaline, not ink. Follow one man's descent into a night where every choice has a price, and survival means confronting the rules he lives by. Are you ready to face the chaos?
+            </p>
+        </div>
+
+        <div class="cta-section">
+            <a href="#" class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1">
+                LEARN THE RULES
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>
