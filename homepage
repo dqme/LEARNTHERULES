@@ -7,18 +7,29 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Custom CSS for font */
+        /* Custom CSS for font and subtle background animation */
         body {
-            font-family: 'Inter', sans-serif; /* Default font */
-            background-color: #111827; /* Dark background */
+            font-family: 'Inter', sans-serif;
+            /* Animated Gradient Background */
+            background: linear-gradient(270deg, #111827, #1f2937, #111827); /* Dark Gray/Blue Tones */
+            background-size: 600% 600%;
+            animation: slowGradientShift 25s ease infinite;
             color: #F3F4F6; /* Light text */
             min-height: 100vh;
-            display: flex;
+            display: flex; /* Use flex for centering */
             justify-content: center;
             align-items: center;
+            padding: 1rem; /* Add padding */
         }
+
+        @keyframes slowGradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         /* Style for the warning icon */
         .warning-icon {
             width: 1.5rem; /* 24px */
@@ -27,13 +38,30 @@
             margin-right: 0.5rem; /* Spacing */
             vertical-align: middle; /* Align with text */
         }
+
+        /* Style for section icons */
+        .section-icon {
+            width: 1.5rem; /* 24px */
+            height: 1.5rem; /* 24px */
+            margin-right: 0.5rem; /* Spacing */
+            display: inline-block; /* Align with heading */
+            vertical-align: bottom; /* Align nicely with text */
+            color: #9ca3af; /* Gray icon color */
+        }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100">
+<body class="text-gray-100">
 
-    <div class="container mx-auto p-8 max-w-2xl text-center">
+    <div class="container mx-auto p-6 md:p-8 max-w-4xl text-center">
 
-        <div class="warning-section bg-yellow-400 border-l-4 border-yellow-600 text-yellow-900 p-4 rounded-md shadow-lg mb-12" role="alert">
+        <div class="mb-10">
+            <h1 class="text-4xl md:text-5xl font-black text-white uppercase tracking-wider mb-2">
+                [Your Comic Title Here]
+            </h1>
+            <p class="text-lg text-gray-400">[Brief Tagline or Subtitle]</p>
+        </div>
+
+        <div class="warning-section bg-yellow-500 border-l-4 border-yellow-700 text-yellow-900 p-4 rounded-md shadow-lg mb-10 mx-auto max-w-2xl" role="alert">
             <p class="font-bold flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="warning-icon">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
@@ -43,20 +71,47 @@
             <p>This story contains flashing lights, potentially intense graphics, and mature themes. Viewer discretion is advised.</p>
         </div>
 
-        <div class="intro-section mb-12">
-            <h1 class="text-3xl md:text-4xl font-bold mb-4 text-red-500">Welcome</h1>
-            <p class="text-lg md:text-xl leading-relaxed text-gray-300">
+        <div class="intro-section mb-12 bg-gray-800/50 backdrop-blur-sm p-8 rounded-lg shadow-xl mx-auto max-w-3xl">
+            <h2 class="text-2xl md:text-3xl font-bold mb-4 text-red-500">Welcome</h2>
+            <p class="text-base md:text-lg leading-relaxed text-gray-300 mb-6">
                 In a city that never sleeps, some rules are etched in adrenaline, not ink. Follow one man's descent into a night where every choice has a price, and survival means confronting the rules he lives by. Are you ready to face the chaos?
             </p>
-        </div>
-
-        <div class="cta-section">
-            <a href="#" class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1">
+            <a href="#" class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1 text-lg">
                 LEARN THE RULES
             </a>
         </div>
 
-    </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto">
 
-</body>
+            <div class="placeholder-section bg-gray-800 p-6 rounded-lg shadow-lg text-left hover:bg-gray-700 transition duration-300">
+                <h3 class="text-xl font-bold mb-3 text-gray-200 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="section-icon">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                    </svg>
+                    About
+                </h3>
+                <p class="text-gray-400 text-sm">Learn more about the story, the setting, and the creator. (Coming Soon)</p>
+            </div>
+
+            <div class="placeholder-section bg-gray-800 p-6 rounded-lg shadow-lg text-left hover:bg-gray-700 transition duration-300">
+                <h3 class="text-xl font-bold mb-3 text-gray-200 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="section-icon">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                    </svg>
+                    Characters
+                </h3>
+                <p class="text-gray-400 text-sm">Meet the cast and explore their backgrounds. (Coming Soon)</p>
+            </div>
+
+            <div class="placeholder-section bg-gray-800 p-6 rounded-lg shadow-lg text-left hover:bg-gray-700 transition duration-300">
+                <h3 class="text-xl font-bold mb-3 text-gray-200 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="section-icon">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                    </svg>
+                    Glossary
+                </h3>
+                <p class="text-gray-400 text-sm">Understand the terms, slang, and unique concepts of this world. (Coming Soon)</p>
+            </div>
+
+        </div> </div> </body>
 </html>
