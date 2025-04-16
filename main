@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEARNTHERULES - Web Comic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Creepster&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* --- Global Styles --- */
+        body { font-family: 'Inter', sans-serif; color: #F3F4F6; margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; background-color: #111827; /* Default background */ }
+        /* Ensure only active page takes space */
+        .page-content { display: none; flex-grow: 1; min-height: calc(100vh - 4rem); /* Adjust if nav height changes */ width: 100%; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; padding: 1rem; }
+        .page-content.active { display: flex; }
+        nav { height: 4rem; background-color: #1f2937; color: #e5e7eb; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10; flex-shrink: 0; }
+        nav button, nav select { background-color: #4b5563; color: #e5e7eb; border: none; padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer; transition: background-color 0.2s; font-weight: bold; }
+        nav button:hover, nav select:hover { background-color: #6b7280; }
+        nav button:disabled { background-color: #374151; cursor: not-allowed; opacity: 0.6; }
+        nav select { margin: 0 1rem; background-color: #4b5563; /* Ensure select background matches */ border-right: 8px solid transparent; /* Add dropdown arrow space */ }
+        .nav-title { font-weight: 900; font-size: 1.25rem; text-transform: uppercase; }
+
+        /* --- Page Specific Styles (Scoped - Condensed) --- */
+        /* === Homepage Styles === */
+        #page-home { background: linear-gradient(270deg, #111827, #1f2937, #111827); background-size: 600% 600%; animation: slowGradientShift 25s ease infinite; justify-content: center; }
+        @keyframes slowGradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        #page-home .warning-icon, #page-home .section-icon { width: 1.5rem; height: 1.5rem; display: inline-block; margin-right: 0.5rem; vertical-align: middle; } #page-home .section-icon { color: #9ca3af; vertical-align: bottom; }
+        /* === Page 1 Styles === */
+        #page-1 { --page1-bg-color: #000000; background-color: var(--page1-bg-color); }
+        #page-1 .description-paragraph { font-family: 'Inter', sans-serif; font-weight: 700; color: #EF4444; text-shadow: 0px 0px 4px black, 0px 0px 6px black; animation: page1_shakeSubtle 0.3s linear infinite; line-height: 1.7; }
+        @keyframes page1_shakeSubtle { 0%{transform:translate(0.5px, 0.5px)} 25%{transform:translate(-0.5px, -0.5px)} 50%{transform:translate(0.5px, -0.5px)} 75%{transform:translate(-0.5px, 0.5px)} 100%{transform:translate(0.5px, 0.5px)} }
+        #page-1 .rule-text { font-family: 'Creepster', cursive; font-size: 6rem; text-align: center; line-height: 1.1; animation: page1_flashNeurotic 0.2s infinite alternate, page1_shake 0.1s infinite alternate; text-shadow: 0 0 5px #000, 0 0 10px #000, 0 0 15px #000, 0 0 20px #000; margin-top: 2rem; }
+        @keyframes page1_flashNeurotic { 0%,49%{color:#DC2626;opacity:1} 50%,100%{color:#000;opacity:.8} }
+        @keyframes page1_shake { 0%{transform:translate(1px, 1px) rotate(0deg)} 10%{transform:translate(-1px, -2px) rotate(-.5deg)} 20%{transform:translate(-2px, 0px) rotate(.5deg)} 30%{transform:translate(2px, 2px) rotate(0deg)} 40%{transform:translate(1px, -1px) rotate(.5deg)} 50%{transform:translate(-1px, 2px) rotate(-.5deg)} 60%{transform:translate(-2px, 1px) rotate(0deg)} 70%{transform:translate(2px, 1px) rotate(-.5deg)} 80%{transform:translate(-1px, -1px) rotate(.5deg)} 90%{transform:translate(1px, 2px) rotate(0deg)} 100%{transform:translate(1px, -2px) rotate(-.5deg)} }
+        /* === Page 2 Styles === */
+        #page-2 { --page2-bg-color-start: #450a0a; --page2-bg-color-end: #7f1d1d; --page2-crack-color: rgba(0, 0, 0, 0.3); --page2-crack-intensity: 1; --page2-transition-duration: 2s; --page2-door-anim-duration: 1.5s; background: linear-gradient(45deg, var(--page2-bg-color-start), var(--page2-bg-color-end)); background-size: 400% 400%; position: relative; animation: page2_gradientShift 15s ease infinite alternate; transition: background 0.5s ease-out; }
+        @keyframes page2_gradientShift { 0%{background-position:0% 50%} 100%{background-position:100% 50%} }
+        #page-2::before { content:''; position:absolute; top:0; left:0; right:0; bottom:0; background-image:radial-gradient(var(--page2-crack-color) calc(1px * var(--page2-crack-intensity)), transparent calc(1px * var(--page2-crack-intensity))), radial-gradient(var(--page2-crack-color) calc(1px * var(--page2-crack-intensity)), transparent calc(1px * var(--page2-crack-intensity))); background-size:calc(50px * (2 - var(--page2-crack-intensity))) calc(50px * (2 - var(--page2-crack-intensity))), calc(50px * (2 - var(--page2-crack-intensity))) calc(50px * (2 - var(--page2-crack-intensity))); background-position:0 0, 25px 25px; opacity:.4; animation:page2_pulseCracks 4s infinite ease-in-out alternate; transition:background-size 1s ease-out, opacity 1s ease-out; z-index:-1 }
+        @keyframes page2_pulseCracks { from{opacity:.2} to{opacity:.5} }
+        #page-2.trapped-state { --page2-crack-intensity: 1.6; --page2-bg-color-start: #7f1d1d; --page2-bg-color-end: #450a0a; } #page-2.trapped-state::before { opacity:.7 } #page-2.locked::before { animation-play-state:paused; opacity:.7 }
+        #page-2 .description-paragraph { font-weight:700; color:#93c5fd; text-shadow:1px 1px 3px rgba(0,0,0,.8); transition:color var(--page2-transition-duration) ease-out; line-height:1.7; position:relative; z-index:1 }
+        #page-2 .description-paragraph.trapped { color:#f87171; animation:page2_jitterText .2s linear infinite } #page-2 .description-paragraph.locked { animation:none; color:#f87171 } @keyframes page2_jitterText { 0%,100%{transform:translate(.5px, -.5px)} 50%{transform:translate(-.5px, .5px)} }
+        #page-2 .visual-element { display:flex; flex-grow:1; justify-content:center; align-items:center; width:100%; position:relative }
+        #page-2 .protect-text { font-family:'Archivo Black', sans-serif; font-size:5rem; text-align:center; line-height:1.1; color:#60a5fa; text-shadow:0 0 10px rgba(0,0,0,.7); margin-top:1rem; position:relative; z-index:1; animation:page2_breathe 4s infinite ease-in-out; transition:color var(--page2-transition-duration) ease-out, opacity .5s ease-out }
+        @keyframes page2_breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.02)} }
+        #page-2 .protect-text.trapped { color:#dc2626; animation:none } #page-2 .protect-text.trapped:not(.locked) { animation:page2_shakeIntense .1s infinite linear alternate } #page-2 .protect-text.locked { opacity:0; animation:none }
+        #page-2 .protect-text::before, #page-2 .protect-text::after { content:''; position:absolute; top:-15%; height:130%; width:51%; background:linear-gradient(to bottom right, #a0aec0, #4a5568); border:1px solid #2d3748; box-shadow:inset 0 0 10px rgba(0,0,0,.5), 3px 3px 10px rgba(0,0,0,.3); z-index:3; transform:translateX(-100%) }
+        #page-2 .protect-text::after { left:auto; right:0; transform:translateX(100%) }
+        #page-2 .protect-text.trapped::before { animation:page2_closeDoorLeft var(--page2-door-anim-duration) ease-in-out forwards } #page-2 .protect-text.trapped::after { animation:page2_closeDoorRight var(--page2-door-anim-duration) ease-in-out forwards }
+        @keyframes page2_closeDoorLeft { from{transform:translateX(-100%)} to{transform:translateX(0%)} } @keyframes page2_closeDoorRight { from{transform:translateX(100%)} to{transform:translateX(0%)} } @keyframes page2_shakeIntense { 0%{transform:translate(2px, 1.5px) rotate(.5deg)} 25%{transform:translate(-1.5px, -2px) rotate(-.5deg)} 50%{transform:translate(1.5px, 2px) rotate(.5deg)} 75%{transform:translate(-2px, -1.5px) rotate(-.5deg)} 100%{transform:translate(2px, 1.5px) rotate(.5deg)} }
+        #page-2 .broken-shield { position:absolute; width:100px; height:120px; top:50%; left:50%; transform:translate(-50%, -50%) scale(.5); z-index:4; opacity:0; pointer-events:none; transition:opacity 1s ease-out, transform 1s ease-out }
+        #page-2 .broken-shield.show-shield { opacity:1; transform:translate(-50%, -50%) scale(1) }
+        /* === Page 3 Styles === */
+        #page-3 { --page3-bg-color-center: #1a202c; --page3-bg-color-outer: #4c1d95; --page3-text-color: #fff; --page3-accent-color: #63b3ed; --page3-glitch-color: #f56565; background:radial-gradient(ellipse at center, var(--page3-bg-color-center) 0%, var(--page3-bg-color-outer) 100%); background-size:200% 200%; animation:page3_vortexBackground 25s cubic-bezier(.25,.1,.25,1) infinite alternate; position:relative }
+        @keyframes page3_vortexBackground { 0%{background-position:center center;background-size:250% 250%} 100%{background-position:center center;background-size:100% 100%} }
+        #page-3 .description-paragraph { font-weight:700; color:var(--page3-text-color); text-shadow:1px 1px 2px rgba(0,0,0,.7); line-height:1.6; letter-spacing:-.025em; position:relative; z-index:1; opacity:0; animation:page3_fadeInDesc 2s ease-out .5s forwards }
+        @keyframes page3_fadeInDesc { to{opacity:1} }
+        #page-3 .visual-element { display:flex; flex-grow:1; justify-content:center; align-items:center; width:100%; max-width:600px; position:relative }
+        #page-3 #calculationSvg { width:100%; height:100%; min-height:300px; overflow:visible }
+        #page-3 #calculationSvg text { font-family:'Inter', sans-serif; font-size:10px; font-weight:700; fill:var(--page3-accent-color); text-anchor:middle; opacity:0; transition:opacity .5s ease-out }
+        #page-3 #calculationSvg circle, #page-3 #calculationSvg rect { fill:none; stroke:var(--page3-accent-color); stroke-width:1px; opacity:0; transition:opacity .5s ease-out }
+        #page-3 #calculationSvg .result-dot { fill:#fff; stroke:none; filter:drop-shadow(0 0 5px #fff) drop-shadow(0 0 10px #fff); opacity:0; transition:opacity 1s ease-in-out }
+        /* Responsive */
+        @media (max-width: 768px) { #page-1 .rule-text, #page-2 .protect-text{font-size:4rem} #page-1 .description-paragraph, #page-2 .description-paragraph, #page-3 .description-paragraph{font-size:1rem} #page-2 .broken-shield{width:80px;height:100px} #page-3 #calculationSvg text{font-size:8px} }
+        @media (max-width: 480px) { #page-1 .rule-text, #page-2 .protect-text{font-size:3rem} #page-1 .description-paragraph, #page-2 .description-paragraph, #page-3 .description-paragraph{font-size:.9rem} #page-2 .broken-shield{width:60px;height:80px} #page-3 #calculationSvg text{font-size:7px} }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <span class="nav-title">LEARNTHERULES</span>
+        <div>
+            <button id="homeBtn">Home</button>
+            <select id="pageSelect">
+                <option value="0">Homepage</option>
+                <option value="1">Page 1: PANIC</option>
+                <option value="2">Page 2: PROTECT</option>
+                <option value="3">Page 3: CALCULATION</option>
+            </select>
+            <button id="prevBtn" disabled>Previous</button>
+            <button id="nextBtn">Next</button>
+        </div>
+    </nav>
+
+    <main id="pageContainer" class="flex-grow">
+        <div id="page-home" class="page-content active"> <div class="container mx-auto p-6 md:p-8 max-w-4xl text-center"> <div class="mb-10"> <h1 class="text-4xl md:text-5xl font-black text-white uppercase tracking-wider mb-2"> LEARNTHERULES </h1> <p class="text-lg text-gray-400">Win or lose, the city takes its cut.</p> </div> <div class="warning-section bg-yellow-500 border-l-4 border-yellow-700 text-yellow-900 p-4 rounded-md shadow-lg mb-10 mx-auto max-w-2xl" role="alert"> <p class="font-bold flex items-center justify-center"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="warning-icon"> <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" /> </svg> Content Warning </p> <p>This story contains flashing lights, potentially intense graphics, and mature themes. Viewer discretion is advised.</p> </div> <div class="intro-section mb-12 bg-gray-800/50 backdrop-blur-sm p-8 rounded-lg shadow-xl mx-auto max-w-3xl"> <h2 class="text-2xl md:text-3xl font-bold mb-4 text-red-500">Welcome</h2> <p class="text-base md:text-lg leading-relaxed text-gray-300 mb-6"> In a city that never sleeps, some rules are etched in adrenaline, not ink. Follow one man's descent into a night where every choice has a price, and survival means confronting the rules he lives by. Are you ready to face the chaos? </p> <button id="learnRulesBtn" class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1 text-lg"> LEARN THE RULES </button> </div> <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto"> <div class="placeholder-section bg-gray-800 p-6 rounded-lg shadow-lg text-left hover:bg-gray-700 transition duration-300"> <h3 class="text-xl font-bold mb-3 text-gray-200 flex items-center"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="section-icon"> <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /> </svg> About </h3> <p class="text-gray-400 text-sm">Learn more about the story, the setting, and the creator. (Coming Soon)</p> </div> <div class="placeholder-section bg-gray-800 p-6 rounded-lg shadow-lg text-left hover:bg-gray-700 transition duration-300"> <h3 class="text-xl font-bold mb-3 text-gray-200 flex items-center"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="section-icon"> <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /> </svg> Characters </h3> <p class="text-gray-400 text-sm">Meet the cast and explore their backgrounds. (Coming Soon)</p> </div> <div class="placeholder-section bg-gray-800 p-6 rounded-lg shadow-lg text-left hover:bg-gray-700 transition duration-300"> <h3 class="text-xl font-bold mb-3 text-gray-200 flex items-center"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="section-icon"> <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /> </svg> Glossary </h3> <p class="text-gray-400 text-sm">Understand the terms, slang, and unique concepts of this world. (Coming Soon)</p> </div> </div> </div> </div>
+        <div id="page-1" class="page-content"> <div class="description-wrapper max-w-2xl text-center mb-8 px-4"> <p class="description-paragraph text-lg md:text-xl"> Instinct screamed. He shoved her back—a fragile shield against the closing circle. Five shadows solidified into threats, leering, predatory. His breath hitched. Years of drills warred with the rising tide of adrenaline, a single, frantic thought surfacing through the chaos: </p> </div> <div class="visual-element flex-grow flex items-start justify-center w-full px-4"> <h1 class="rule-text"> RULE 1: ALWAYS AVOID A FIGHT </h1> </div> </div>
+        <div id="page-2" class="page-content"> <div class="description-wrapper max-w-3xl text-center mb-10 px-4 mx-auto"> <p id="page2DescriptionText" class="description-paragraph text-lg md:text-xl leading-relaxed"> Rule 1 shattered against the hard reality. He met the first rush, fists blurring, instinct overriding thought. A clumsy grapple, a sharp elbow, space gained. Training flowed, turning defense into attack, the chaotic dance slowly finding his rhythm. One man down, then two. He saw an opening, a path... but a strangled cry cut through the din. The third man, the one he'd dismissed, had the girl, knife glinting against her throat. Checkmate. The rhythm broke. Trapped. </p> </div> <div class="visual-element"> <h1 id="page2VisualText" class="protect-text"> PROTECT AT ALL COSTS </h1> <svg id="page2ShieldSvg" class="broken-shield" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M50 0 L10 25 V65 C10 95 50 120 50 120 C50 120 90 95 90 65 V25 L50 0 Z" fill="#718096" stroke="#2d3748" stroke-width="3"/> <path d="M45 50 L25 75" stroke="#2d3748" stroke-width="4" stroke-linecap="round"/> <path d="M55 45 L75 70 L60 95" stroke="#2d3748" stroke-width="4" stroke-linecap="round"/> <path d="M50 0 L50 60 L30 80" stroke="#2d3748" stroke-width="3" stroke-linecap="round"/> </svg> </div> </div>
+        <div id="page-3" class="page-content"> <div class="description-wrapper max-w-3xl text-center mb-8 px-4 mx-auto"> <p id="page3DescriptionText" class="description-paragraph text-lg md:text-xl"> The world narrows to the glint of the knife, the girl's terrified gasp, the captor's sneer. Noise fades. Training protocols flash and discard – useless. Rule 1: Irrelevant. Rule 'Protect': Failing. His breath steadies, heartbeat turning to a cold, metronomic thud. Options cycle – each worse than the last. Until one clicks into place. A terrible, precise calculation. </p> </div> <div class="visual-element"> <svg id="calculationSvg" viewBox="0 0 300 200" preserveAspectRatio="xMidYMid meet"></svg> </div> </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Elements ---
+            const pages = document.querySelectorAll('.page-content');
+            const pageSelect = document.getElementById('pageSelect');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const homeBtn = document.getElementById('homeBtn');
+            const learnRulesBtn = document.getElementById('learnRulesBtn');
+            const pageCount = pages.length;
+            let currentPageIndex = 0;
+
+            // --- Animation State ---
+            let page1BgInterval = null;
+            let page2ActivateTrapTimer = null;
+            let page2LockStateTimer = null;
+            let page2ShowShieldTimer = null;
+            let page3AnimationId = null;
+            let page3Elements = []; // Keep track of SVG elements for page 3
+
+            // --- Stop All Animations ---
+            function stopAllPageAnimations() {
+                // console.log("Stopping all animations..."); // Debug
+                try {
+                    // Stop Page 1
+                    if (page1BgInterval) clearInterval(page1BgInterval);
+                    page1BgInterval = null;
+                    const page1Div = document.getElementById('page-1');
+                    if(page1Div) page1Div.style.backgroundColor = '#000'; // Reset
+
+                    // Stop Page 2
+                    clearTimeout(page2ActivateTrapTimer); page2ActivateTrapTimer = null;
+                    clearTimeout(page2LockStateTimer); page2LockStateTimer = null;
+                    clearTimeout(page2ShowShieldTimer); page2ShowShieldTimer = null;
+                    const page2Div = document.getElementById('page-2');
+                    const p2Visual = document.getElementById('page2VisualText');
+                    const p2Desc = document.getElementById('page2DescriptionText');
+                    const p2Shield = document.getElementById('page2ShieldSvg');
+                    // Reset classes safely
+                    if(page2Div) page2Div.classList.remove('trapped-state', 'locked');
+                    if(p2Visual) p2Visual.classList.remove('trapped', 'locked');
+                    if(p2Desc) p2Desc.classList.remove('trapped', 'locked');
+                    if(p2Shield) p2Shield.classList.remove('show-shield');
+                    // Reset door animation state if needed (by removing/re-adding element or class)
+                     if(p2Visual) {
+                        p2Visual.style.animation = ''; // Clear inline animation styles if any
+                        // Force reflow might be needed in some cases, but try without first
+                    }
+
+
+                    // Stop Page 3
+                    if (page3AnimationId) cancelAnimationFrame(page3AnimationId);
+                    page3AnimationId = null;
+                    page3Elements = []; // Clear element tracker
+                    const svg = document.getElementById('calculationSvg');
+                    if (svg) svg.innerHTML = ''; // Clear SVG content
+                } catch (error) {
+                    console.error("Error stopping animations:", error);
+                }
+            }
+
+            // --- Show Page Function ---
+            function showPage(index) {
+                // console.log(`Attempting to show page: ${index}`); // Debug
+                if (index < 0 || index >= pageCount || !pages[index]) {
+                    console.error(`Invalid page index: ${index}`);
+                    return;
+                }
+
+                // Stop animations *before* switching page visibility
+                stopAllPageAnimations();
+
+                // Hide all pages, then show the target page
+                pages.forEach((page, i) => {
+                    page.classList.toggle('active', i === index);
+                });
+
+                currentPageIndex = index;
+
+                // Update Nav Controls safely
+                if (pageSelect) pageSelect.value = index;
+                if (prevBtn) prevBtn.disabled = (index === 0);
+                if (nextBtn) nextBtn.disabled = (index === pageCount - 1);
+
+                // Start animations for the *new* active page
+                try {
+                    if (index === 1) { startPage1Animation(); }
+                    else if (index === 2) { startPage2Animation(); }
+                    else if (index === 3) { startPage3Animation(); }
+                } catch (error) {
+                     console.error(`Error starting animation for page ${index}:`, error);
+                }
+                // console.log(`Successfully shown page: ${index}`); // Debug
+            }
+
+            // --- Page Animation Start Functions ---
+
+            // Page 1: PANIC
+            function startPage1Animation() {
+                // console.log("Starting Page 1 Animation"); // Debug
+                const page1Div = document.getElementById('page-1');
+                if (!page1Div) { console.error("Page 1 div not found"); return; }
+                // Ensure previous interval is cleared (belt-and-suspenders)
+                if (page1BgInterval) clearInterval(page1BgInterval);
+                let isWhite = false;
+                page1Div.style.backgroundColor = '#000'; // Start black
+                page1BgInterval = setInterval(() => {
+                    isWhite = !isWhite;
+                    page1Div.style.backgroundColor = isWhite ? '#FFFFFF' : '#000000';
+                }, 400);
+            }
+
+            // Page 2: PROTECT
+            function startPage2Animation() {
+                // console.log("Starting Page 2 Animation"); // Debug
+                const p2Visual = document.getElementById('page2VisualText');
+                const p2Desc = document.getElementById('page2DescriptionText');
+                const p2Shield = document.getElementById('page2ShieldSvg');
+                const page2Div = document.getElementById('page-2');
+                if (!p2Visual || !p2Desc || !p2Shield || !page2Div) { console.error("Page 2 elements not found"); return; }
+
+                // Reset state explicitly before starting timers
+                page2Div.classList.remove('trapped-state', 'locked');
+                p2Visual.classList.remove('trapped', 'locked');
+                p2Desc.classList.remove('trapped', 'locked');
+                p2Shield.classList.remove('show-shield');
+                // Clear any potentially stuck inline styles from previous runs
+                p2Visual.style.animation = '';
+                p2Desc.style.animation = '';
+                p2Shield.style.opacity = '0';
+                p2Shield.style.transform = 'translate(-50%, -50%) scale(0.5)';
+
+
+                const initialDelay = 4500;
+                const doorAnimDurationCss = getComputedStyle(document.documentElement).getPropertyValue('--page2-door-anim-duration');
+                const doorAnimDurationMs = (parseFloat(doorAnimDurationCss) || 1.5) * 1000;
+                const lockDelay = initialDelay + doorAnimDurationMs - 300;
+                const shieldAppearDelay = initialDelay + doorAnimDurationMs + 200;
+
+                // Clear previous timers before setting new ones
+                clearTimeout(page2ActivateTrapTimer);
+                clearTimeout(page2LockStateTimer);
+                clearTimeout(page2ShowShieldTimer);
+
+                page2ActivateTrapTimer = setTimeout(() => {
+                    if(document.getElementById('page-2')?.classList.contains('active')) { // Only run if page is still active
+                        page2Div.classList.add('trapped-state');
+                        p2Visual.classList.add('trapped');
+                        p2Desc.classList.add('trapped');
+                    }
+                }, initialDelay);
+
+                page2LockStateTimer = setTimeout(() => {
+                     if(document.getElementById('page-2')?.classList.contains('active')) {
+                        page2Div.classList.add('locked');
+                        p2Visual.classList.add('locked');
+                        p2Desc.classList.add('locked');
+                     }
+                }, lockDelay);
+
+                page2ShowShieldTimer = setTimeout(() => {
+                    if(document.getElementById('page-2')?.classList.contains('active') && p2Shield) {
+                        p2Shield.style.transitionDelay = '0s';
+                        p2Shield.classList.add('show-shield');
+                    }
+                }, shieldAppearDelay);
+            }
+
+            // Page 3: CALCULATION
+            function startPage3Animation() {
+                // console.log("Starting Page 3 Animation"); // Debug
+                const svg = document.getElementById('calculationSvg');
+                if (!svg) { console.error("SVG container not found for Page 3"); return; }
+
+                // Ensure previous animation is stopped & SVG is clear
+                if (page3AnimationId) cancelAnimationFrame(page3AnimationId);
+                svg.innerHTML = '';
+                page3Elements = []; // Reset element tracker
+
+                const viewBox = svg.viewBox.baseVal;
+                if (!viewBox || viewBox.width === 0) {
+                    console.error("SVG ViewBox not ready or invalid for Page 3");
+                     // Try setting a default viewBox if needed, though CSS min-height should help
+                     // svg.setAttribute('viewBox', '0 0 300 200');
+                     // viewBox = svg.viewBox.baseVal;
+                     // if(!viewBox || viewBox.width === 0) return; // Give up if still no viewBox
+                     return; // Exit if viewBox not ready
+                }
+
+                let startTime = null;
+                const animationDuration = 12000; // ms
+                const svgNS = "http://www.w3.org/2000/svg";
+
+                const computedStyle = getComputedStyle(document.documentElement);
+                const accentColor = computedStyle.getPropertyValue('--page3-accent-color').trim() || '#63b3ed';
+                const glitchColor = computedStyle.getPropertyValue('--page3-glitch-color').trim() || '#f56565';
+
+                function random(min, max) { return Math.random() * (max - min) + min; }
+                function createSvgElement(type) { const el = document.createElementNS(svgNS, type); if (svg) { svg.appendChild(el); } else { return null; } return el; }
+
+                function addCalculationElement() {
+                    try {
+                        if (page3Elements.length > 50) return;
+                        const type = Math.random() > 0.6 ? 'text' : (Math.random() > 0.5 ? 'circle' : 'rect');
+                        const x = random(viewBox.width * 0.1, viewBox.width * 0.9);
+                        const y = random(viewBox.height * 0.1, viewBox.height * 0.9);
+                        const maxLife = random(2000, 5000);
+                        let el;
+                        if (type === 'text') { el = createSvgElement('text'); if (!el) return; const fragments = ["P(Success)=Low%", "Risk: High", "Rule_1->FAIL", "Option C?", "VAR_X", "T-minus?", "CALC...", "ERR:", "ALT_ROUTE?", "IMPOSSIBLE"]; el.textContent = fragments[Math.floor(random(0, fragments.length))]; el.setAttribute('x', x); el.setAttribute('y', y); }
+                        else if (type === 'circle') { el = createSvgElement('circle'); if (!el) return; el.setAttribute('cx', x); el.setAttribute('cy', y); el.setAttribute('r', random(3, 8)); }
+                        else { el = createSvgElement('rect'); if (!el) return; const size = random(5, 15); el.setAttribute('x', x - size / 2); el.setAttribute('y', y - size / 2); el.setAttribute('width', size); el.setAttribute('height', size); }
+                        setTimeout(() => { if (el && svg.contains(el)) { el.style.opacity = random(0.5, 0.9); } }, 10); // Ensure element exists
+                        page3Elements.push({ el: el, type: type, x: x, y: y, vx: random(-0.2, 0.2), vy: random(-0.2, 0.2), life: maxLife, maxLife: maxLife });
+                    } catch (error) {
+                        console.error("Error adding calculation element:", error);
+                    }
+                }
+
+                function showCalculationResult() {
+                    // console.log("Showing calculation result dot"); // Debug
+                    try {
+                        const resultDot = createSvgElement('circle'); if (!resultDot) return;
+                        resultDot.setAttribute('cx', viewBox.width / 2); resultDot.setAttribute('cy', viewBox.height / 2);
+                        resultDot.setAttribute('r', 3); resultDot.classList.add('result-dot');
+                        setTimeout(() => { if (resultDot && svg.contains(resultDot)) { resultDot.style.opacity = 1; } }, 10); // Ensure element exists
+                    } catch (error) {
+                         console.error("Error showing calculation result:", error);
+                    }
+                }
+
+                function calculationLoop(timestamp) {
+                    if (page3AnimationId === null || !svg || !document.contains(svg)) return; // Stop if cancelled or SVG removed
+
+                    try {
+                        if (!startTime) startTime = timestamp;
+                        const elapsed = timestamp - startTime;
+
+                        page3Elements = page3Elements.filter(item => {
+                            if (!item || !item.el || !svg.contains(item.el)) return false;
+                            item.x += item.vx; item.y += item.vy;
+                            if (item.x < 0 || item.x > viewBox.width) item.vx *= -1; if (item.y < 0 || item.y > viewBox.height) item.vy *= -1;
+                            try { if (item.type === 'text') { item.el.setAttribute('x', item.x); item.el.setAttribute('y', item.y); } else if (item.type === 'circle') { item.el.setAttribute('cx', item.x); item.el.setAttribute('cy', item.y); } else { const size = parseFloat(item.el.getAttribute('width')); item.el.setAttribute('x', item.x - size / 2); item.el.setAttribute('y', item.y - size / 2); } } catch (e) {}
+                            item.life -= 16.67; // Roughly 60fps timing
+                            const opacity = Math.max(0, Math.min(0.9, (item.life / item.maxLife) * 2)); // Ensure opacity doesn't go negative
+                            if (item.el) item.el.style.opacity = opacity;
+                            if (Math.random() < 0.005 && item.el) { item.el.style.fill = glitchColor; item.el.style.stroke = glitchColor; setTimeout(() => { if (item.el && svg.contains(item.el)) { item.el.style.fill = item.type === 'text' ? accentColor : 'none'; item.el.style.stroke = item.type !== 'text' ? accentColor : 'none'; } }, 100); }
+                            if (item.life <= 0) { try { svg.removeChild(item.el); } catch (e) {} return false; }
+                            return true;
+                        });
+
+                        if (elapsed < animationDuration && Math.random() < 0.1) { addCalculationElement(); }
+
+                        if (elapsed < animationDuration) { page3AnimationId = requestAnimationFrame(calculationLoop); }
+                        else { page3Elements.forEach(item => { if (item && item.el && svg.contains(item.el)) { try { svg.removeChild(item.el); } catch (e) {} } }); page3Elements = []; showCalculationResult(); page3AnimationId = null; }
+                    } catch (error) {
+                         console.error("Error in calculationLoop:", error);
+                         cancelAnimationFrame(page3AnimationId); // Stop loop on error
+                         page3AnimationId = null;
+                    }
+                }
+                page3AnimationId = requestAnimationFrame(calculationLoop); // Start the loop
+            }
+
+
+            // --- Event Listeners ---
+            if (prevBtn) { prevBtn.addEventListener('click', () => showPage(currentPageIndex - 1)); }
+            else { console.error("Previous button not found"); }
+            if (nextBtn) { nextBtn.addEventListener('click', () => showPage(currentPageIndex + 1)); }
+            else { console.error("Next button not found"); }
+            if (homeBtn) { homeBtn.addEventListener('click', () => showPage(0)); }
+            else { console.error("Home button not found"); }
+            if (pageSelect) { pageSelect.addEventListener('change', (e) => showPage(parseInt(e.target.value))); }
+            else { console.error("Page select dropdown not found"); }
+            if (learnRulesBtn) { learnRulesBtn.addEventListener('click', () => showPage(1)); }
+            else { console.error("Learn Rules button not found"); }
+
+            // --- Initial Page Load ---
+            showPage(0);
+
+        }); // End DOMContentLoaded listener
+    </script>
+
+</body>
+</html>
