@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEARNTHERULES - Web Comic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Creepster&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #F3F4F6;
+            margin: 0; /* Remove default margin */
+            padding: 0;
+            min-height: 100vh;
+            display: flex; /* Use flex for layout */
+            flex-direction: column; /* Stack nav and content */
+        }
+
+        /* Hide pages by default */
+        .page-content {
+            display: none;
+            flex-grow: 1; /* Allow page content to fill space */
+            min-height: calc(100vh - 4rem); /* Adjust based on nav height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Prevent scrollbars within page sections */
+            padding: 1rem; /* Add padding */
+            width: 100%; /* Ensure full width */
+        }
+        .page-content.active {
+            display: flex; /* Show active page */
+        }
+
+        /* Navigation Bar */
+        nav {
+            height: 4rem; /* Fixed height for nav */
+            background-color: #1f2937; /* Dark background */
+            color: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            z-index: 10; /* Keep nav on top */
+            flex-shrink: 0; /* Prevent nav from shrinking */
+        }
+        nav button, nav select {
+            background-color: #4b5563;
+            color: #e5e7eb;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-weight: bold;
+        }
+        nav button:hover, nav select:hover {
+            background-color: #6b7280;
+        }
+        nav button:disabled {
+            background-color: #374151;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        nav select {
+            margin: 0 1rem;
+        }
+        .nav-title {
+            font-weight: 900; /* font-black */
+            font-size: 1.25rem; /* text-xl */
+            text-transform: uppercase;
+        }
+
+
+        /* --- Page Specific Styles (Scoped) --- */
+
+        /* === Homepage Styles === */
+        #page-home {
+            background: linear-gradient(270deg, #111827, #1f2937, #111827);
+            background-size: 600% 600%;
+            animation: slowGradientShift 25s ease infinite;
+            justify-content: center; /* Override default flex behavior if needed */
+        }
+        @keyframes slowGradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        #page-home .warning-icon, #page-home .section-icon {
+            width: 1.5rem; height: 1.5rem; display: inline-block; margin-right: 0.5rem; vertical-align: middle;
+        }
+         #page-home .section-icon { color: #9ca3af; vertical-align: bottom; }
+
+        /* === Page 1 Styles (PANIC) === */
+        #page-1 {
+            --page1-bg-color: #000000; /* Variable for JS control */
+            background-color: var(--page1-bg-color);
+            /* Background flashing managed by JS */
+        }
+        #page-1 .description-paragraph {
+            font-family: 'Inter', sans-serif; font-weight: 700; color: #EF4444;
+            text-shadow: 0px 0px 4px black, 0px 0px 6px black;
+            animation: page1_shakeSubtle 0.3s linear infinite;
+            line-height: 1.7;
+        }
+        @keyframes page1_shakeSubtle { /* Renamed to avoid conflict */
+            0% { transform: translate(0.5px, 0.5px); } 25% { transform: translate(-0.5px, -0.5px); }
+            50% { transform: translate(0.5px, -0.5px); } 75% { transform: translate(-0.5px, 0.5px); }
+            100% { transform: translate(0.5px, 0.5px); }
+        }
+        #page-1 .rule-text {
+            font-family: 'Creepster', cursive; font-size: 6rem; text-align: center; line-height: 1.1;
+            animation: page1_flashNeurotic 0.2s infinite alternate, page1_shake 0.1s infinite alternate;
+            text-shadow: 0 0 5px #000, 0 0 10px #000, 0 0 15px #000, 0 0 20px #000;
+            margin-top: 2rem;
+        }
+        @keyframes page1_flashNeurotic {
+            0%, 49% { color: #DC2626; opacity: 1; } 50%, 100% { color: #000000; opacity: 0.8; }
+        }
+        @keyframes page1_shake {
+             0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-0.5deg); }
+             20% { transform: translate(-2px, 0px) rotate(0.5deg); } 30% { transform: translate(2px, 2px) rotate(0deg); }
+             40% { transform: translate(1px, -1px) rotate(0.5deg); } 50% { transform: translate(-1px, 2px) rotate(-0.5deg); }
+             60% { transform: translate(-2px, 1px) rotate(0deg); } 70% { transform: translate(2px, 1px) rotate(-0.5deg); }
+             80% { transform: translate(-1px, -1px) rotate(0.5deg); } 90% { transform: translate(1px, 2px) rotate(0deg); }
+             100% { transform: translate(1px, -2px) rotate(-0.5deg); }
+        }
+        /* Responsive */
+        @media (max-width: 768px) { #page-1 .rule-text { font-size: 4rem; } #page-1 .description-paragraph { font-size: 1rem; } }
+        @media (max-width: 480px) { #page-1 .rule-text { font-size: 3rem; } #page-1 .description-paragraph { font-size: 0.9rem; } }
+
+        /* === Page 2 Styles (PROTECT/DOOR) === */
+        #page-2 {
+            --page2-bg-color-start: #450a0a; --page2-bg-color-end: #7f1d1d;
+            --page2-crack-color: rgba(0, 0, 0, 0.3); --page2-crack-intensity: 1;
+            --page2-transition-duration: 2s; --page2-door-anim-duration: 1.5s;
+            background: linear-gradient(45deg, var(--page2-bg-color-start), var(--page2-bg-color-end));
+            background-size: 400% 400%; position: relative;
+            animation: page2_gradientShift 15s ease infinite alternate;
+            transition: background 0.5s ease-out;
+        }
+        @keyframes page2_gradientShift { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+        #page-2::before { /* Background cracks */
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(var(--page2-crack-color) calc(1px * var(--page2-crack-intensity)), transparent calc(1px * var(--page2-crack-intensity))), radial-gradient(var(--page2-crack-color) calc(1px * var(--page2-crack-intensity)), transparent calc(1px * var(--page2-crack-intensity)));
+            background-size: calc(50px * (2 - var(--page2-crack-intensity))) calc(50px * (2 - var(--page2-crack-intensity))), calc(50px * (2 - var(--page2-crack-intensity))) calc(50px * (2 - var(--page2-crack-intensity)));
+            background-position: 0 0, 25px 25px; opacity: 0.4;
+            animation: page2_pulseCracks 4s infinite ease-in-out alternate;
+            transition: background-size 1s ease-out, opacity 1s ease-out; z-index: -1;
+        }
+        @keyframes page2_pulseCracks { from { opacity: 0.2; } to { opacity: 0.5; } }
+        #page-2.trapped-state { --page2-crack-intensity: 1.6; --page2-bg-color-start: #7f1d1d; --page2-bg-color-end: #450a0a; }
+        #page-2.trapped-state::before { opacity: 0.7; }
+        #page-2.locked::before { animation-play-state: paused; opacity: 0.7; }
+        #page-2 .description-paragraph {
+             font-weight: 700; color: #93c5fd; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+             transition: color var(--page2-transition-duration) ease-out; line-height: 1.7; position: relative; z-index: 1;
+        }
+        #page-2 .description-paragraph.trapped { color: #f87171; animation: page2_jitterText 0.2s linear infinite; }
+        #page-2 .description-paragraph.locked { animation: none; color: #f87171; }
+        @keyframes page2_jitterText { 0%, 100% { transform: translate(0.5px, -0.5px); } 50% { transform: translate(-0.5px, 0.5px); } }
+        #page-2 .visual-element { display: flex; flex-grow: 1; justify-content: center; align-items: center; width: 100%; position: relative; }
+        #page-2 .protect-text {
+            font-family: 'Archivo Black', sans-serif; font-size: 5rem; text-align: center; line-height: 1.1;
+            color: #60a5fa; text-shadow: 0 0 10px rgba(0, 0, 0, 0.7); margin-top: 1rem; position: relative; z-index: 1;
+            animation: page2_breathe 4s infinite ease-in-out;
+            transition: color var(--page2-transition-duration) ease-out, opacity 0.5s ease-out;
+        }
+        @keyframes page2_breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+        #page-2 .protect-text.trapped { color: #dc2626; animation: none; }
+        #page-2 .protect-text.trapped:not(.locked) { animation: page2_shakeIntense 0.1s infinite linear alternate; }
+        #page-2 .protect-text.locked { opacity: 0; animation: none; }
+        #page-2 .protect-text::before, #page-2 .protect-text::after { /* Steel Door */
+            content: ''; position: absolute; top: -15%; height: 130%; width: 51%;
+            background: linear-gradient(to bottom right, #a0aec0, #4a5568); border: 1px solid #2d3748;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 3px 3px 10px rgba(0,0,0,0.3);
+            z-index: 3; transform: translateX(-100%);
+            /* Animation applied by JS/Class */
+        }
+        #page-2 .protect-text::after { left: auto; right: 0; transform: translateX(100%); }
+        #page-2 .protect-text.trapped::before { animation: page2_closeDoorLeft var(--page2-door-anim-duration) ease-in-out forwards; }
+        #page-2 .protect-text.trapped::after { animation: page2_closeDoorRight var(--page2-door-anim-duration) ease-in-out forwards; }
+        @keyframes page2_closeDoorLeft { from { transform: translateX(-100%); } to { transform: translateX(0%); } }
+        @keyframes page2_closeDoorRight { from { transform: translateX(100%); } to { transform: translateX(0%); } }
+        @keyframes page2_shakeIntense { /* Renamed */
+            0% { transform: translate(2px, 1.5px) rotate(0.5deg); } 25% { transform: translate(-1.5px, -2px) rotate(-0.5deg); }
+            50% { transform: translate(1.5px, 2px) rotate(0.5deg); } 75% { transform: translate(-2px, -1.5px) rotate(-0.5deg); }
+            100% { transform: translate(2px, 1.5px) rotate(0.5deg); }
+        }
+        #page-2 .broken-shield {
+            position: absolute; width: 100px; height: 120px; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.5); z-index: 4; opacity: 0; pointer-events: none;
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+        #page-2 .broken-shield.show-shield { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        /* Responsive */
+        @media (max-width: 768px) { #page-2 .protect-text { font-size: 3.5rem; } #page-2 .description-paragraph { font-size: 1rem; } #page-2 .broken-shield { width: 80px; height: 100px; } }
+        @media (max-width: 480px) { #page-2 .protect-text { font-size: 2.5rem; } #page-2 .description-paragraph { font-size: 0.9rem; } #page-2 .broken-shield { width: 60px; height: 80px; } }
+
+        /* === Page 3 Styles (CALCULATION) === */
+        #page-3 {
+            --page3-bg-color-center: #1a202c; --page3-bg-color-outer: #4c1d95;
+            --page3-text-color: #ffffff; --page3-accent-color: #63b3ed; --page3-glitch-color: #f56565;
+            background: radial-gradient(ellipse at center, var(--page3-bg-color-center) 0%, var(--page3-bg-color-outer) 100%);
+            background-size: 200% 200%;
+            animation: page3_vortexBackground 25s cubic-bezier(0.25, 0.1, 0.25, 1) infinite alternate;
+            position: relative;
+        }
+        @keyframes page3_vortexBackground { 0% { background-position: center center; background-size: 250% 250%; } 100% { background-position: center center; background-size: 100% 100%; } }
+        #page-3 .description-paragraph {
+            font-weight: 700; color: var(--page3-text-color); text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            line-height: 1.6; letter-spacing: -0.025em; position: relative; z-index: 1;
+            opacity: 0; animation: page3_fadeInDesc 2s ease-out 0.5s forwards;
+        }
+        @keyframes page3_fadeInDesc { to { opacity: 1; } }
+        #page-3 .visual-element { display: flex; flex-grow: 1; justify-content: center; align-items: center; width: 100%; max-width: 600px; position: relative; }
+        #page-3 #calculationSvg { width: 100%; height: 100%; min-height: 300px; overflow: visible; }
+        #page-3 #calculationSvg text { font-family: 'Inter', sans-serif; font-size: 10px; font-weight: bold; fill: var(--page3-accent-color); text-anchor: middle; opacity: 0; transition: opacity 0.5s ease-out; }
+        #page-3 #calculationSvg circle, #page-3 #calculationSvg rect { fill: none; stroke: var(--page3-accent-color); stroke-width: 1px; opacity: 0; transition: opacity 0.5s ease-out; }
+        #page-3 #calculationSvg .result-dot { fill: #ffffff; stroke: none; filter: drop-shadow(0 0 5px #ffffff) drop-shadow(0 0 10px #ffffff); opacity: 0; transition: opacity 1s ease-in-out; }
+        /* Responsive */
+        @media (max-width: 768px) { #page-3 .description-paragraph { font-size: 1rem; } #page-3 #calculationSvg text { font-size: 8px; } }
+        @media (max-width: 480px) { #page-3 .description-paragraph { font-size: 0.9rem; } #page-3 #calculationSvg text { font-size: 7px; } }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <span class="nav-title">LEARNTHERULES</span>
+        <div>
+            <button id="homeBtn">Home</button>
+            <select id="pageSelect">
+                <option value="0">Homepage</option>
+                <option value="1">Page 1: PANIC</option>
+                <option value="2">Page 2: PROTECT</option>
+                <option value="3">Page 3: CALCULATION</option>
+            </select>
+            <button id="prevBtn" disabled>Previous</button>
+            <button id="nextBtn">Next</button>
+        </div>
+    </nav>
+
+    <main id="pageContainer" class="flex-grow">
+
+        <div id="page-home" class="page-content active">
+            <div class="container mx-auto p-6 md:p-8 max-w-4xl text-center">
+                 <div class="mb-10">
+                    <h1 class="text-4xl md:text-5xl font-black text-white uppercase tracking-wider mb-2">
+                        LEARNTHERULES
+                    </h1>
+                    <p class="text-lg text-gray-400">Win or lose, the city takes its cut.</p>
+                </div>
+                <div class="warning-section bg-yellow-500 border-l-4 border-yellow-700 text-yellow-900 p-4 rounded-md shadow-lg mb-10 mx-auto max-w-2xl" role="alert"> <p class="font-bold flex items-center justify-center"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="warning-icon"> <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" /> </svg> Content Warning </p> <p>This story contains flashing lights, potentially intense graphics, and mature themes. Viewer discretion is advised.</p> </div>
+                <div class="intro-section mb-12 bg-gray-800/50 backdrop-blur-sm p-8 rounded-lg shadow-xl mx-auto max-w-3xl"> <h2 class="text-2xl md:text-3xl font-bold mb-4 text-red-500">Welcome</h2> <p class="text-base md:text-lg leading-relaxed text-gray-300 mb-6"> In a city that never sleeps, some rules are etched in adrenaline, not ink. Follow one man's descent into a night where every choice has a price, and survival means confronting the rules he lives by. Are you ready to face the chaos? </p> <button id="learnRulesBtn" class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1 text-lg"> LEARN THE RULES </button> </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto">
+                    <div class="placeholder-section bg-gray-800 p-6 rounded-lg shadow-lg text-left hover:bg-gray-700 transition duration-300"> <h3 class="text-xl font-bold mb-3 text-gray-200 flex items-center"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="section-icon"> <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /> </svg> About </h3> <p class="text-gray-400 text-sm">Learn more about the story, the setting, and the creator. (Coming Soon)</p> </div>
+                    <div class="placeholder-section bg-gray-800 p-6 rounded-lg shadow-lg text-left hover:bg-gray-700 transition duration-300"> <h3 class="text-xl font-bold mb-3 text-gray-200 flex items-center"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="section-icon"> <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /> </svg> Characters </h3> <p class="text-gray-400 text-sm">Meet the cast and explore their backgrounds. (Coming Soon)</p> </div>
+                    <div class="placeholder-section bg-gray-800 p-6 rounded-lg shadow-lg text-left hover:bg-gray-700 transition duration-300"> <h3 class="text-xl font-bold mb-3 text-gray-200 flex items-center"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="section-icon"> <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /> </svg> Glossary </h3> <p class="text-gray-400 text-sm">Understand the terms, slang, and unique concepts of this world. (Coming Soon)</p> </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-1" class="page-content">
+             <div class="description-wrapper max-w-2xl text-center mb-8 px-4">
+                <p class="description-paragraph text-lg md:text-xl">
+                    Instinct screamed. He shoved her back—a fragile shield against the closing circle. Five shadows solidified into threats, leering, predatory. His breath hitched. Years of drills warred with the rising tide of adrenaline, a single, frantic thought surfacing through the chaos:
+                </p>
+            </div>
+            <div class="visual-element flex-grow flex items-start justify-center w-full px-4">
+                <h1 class="rule-text"> RULE 1: ALWAYS AVOID A FIGHT </h1>
+            </div>
+        </div>
+
+        <div id="page-2" class="page-content">
+             <div class="description-wrapper max-w-3xl text-center mb-10 px-4 mx-auto">
+                <p id="page2DescriptionText" class="description-paragraph text-lg md:text-xl leading-relaxed">
+                    Rule 1 shattered against the hard reality. He met the first rush, fists blurring, instinct overriding thought. A clumsy grapple, a sharp elbow, space gained. Training flowed, turning defense into attack, the chaotic dance slowly finding his rhythm. One man down, then two. He saw an opening, a path... but a strangled cry cut through the din. The third man, the one he'd dismissed, had the girl, knife glinting against her throat. Checkmate. The rhythm broke. Trapped.
+                </p>
+            </div>
+             <div class="visual-element">
+                <h1 id="page2VisualText" class="protect-text"> PROTECT AT ALL COSTS </h1>
+                <svg id="page2ShieldSvg" class="broken-shield" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M50 0 L10 25 V65 C10 95 50 120 50 120 C50 120 90 95 90 65 V25 L50 0 Z" fill="#718096" stroke="#2d3748" stroke-width="3"/> <path d="M45 50 L25 75" stroke="#2d3748" stroke-width="4" stroke-linecap="round"/> <path d="M55 45 L75 70 L60 95" stroke="#2d3748" stroke-width="4" stroke-linecap="round"/> <path d="M50 0 L50 60 L30 80" stroke="#2d3748" stroke-width="3" stroke-linecap="round"/> </svg>
+            </div>
+        </div>
+
+        <div id="page-3" class="page-content">
+             <div class="description-wrapper max-w-3xl text-center mb-8 px-4 mx-auto">
+                <p id="page3DescriptionText" class="description-paragraph text-lg md:text-xl">
+                    The world narrows to the glint of the knife, the girl's terrified gasp, the captor's sneer. Noise fades. Training protocols flash and discard – useless. Rule 1: Irrelevant. Rule 'Protect': Failing. His breath steadies, heartbeat turning to a cold, metronomic thud. Options cycle – each worse than the last. Until one clicks into place. A terrible, precise calculation.
+                </p>
+            </div>
+            <div class="visual-element">
+                <svg id="calculationSvg" viewBox="0 0 300 200" preserveAspectRatio="xMidYMid meet"></svg>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- Navigation Logic ---
+        const pages = document.querySelectorAll('.page-content');
+        const pageSelect = document.getElementById('pageSelect');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const homeBtn = document.getElementById('homeBtn');
+        const learnRulesBtn = document.getElementById('learnRulesBtn'); // Button on homepage
+        const pageCount = pages.length;
+        let currentPageIndex = 0;
+
+        // --- Page Specific Animation Timers/States ---
+        let page1BgInterval = null; // Timer for page 1 background flash
+        let page2ActivateTrapTimer = null;
+        let page2LockStateTimer = null;
+        let page2ShowShieldTimer = null;
+        let page3AnimationId = null; // requestAnimationFrame ID for page 3
+
+        function stopAllPageAnimations() {
+            // Stop Page 1 animations
+            if (page1BgInterval) clearInterval(page1BgInterval);
+            page1BgInterval = null;
+            const page1Div = document.getElementById('page-1');
+            if(page1Div) page1Div.style.backgroundColor = '#000'; // Reset background
+
+            // Stop Page 2 animations/clear timeouts
+            clearTimeout(page2ActivateTrapTimer);
+            clearTimeout(page2LockStateTimer);
+            clearTimeout(page2ShowShieldTimer);
+            // Reset page 2 visual state
+            const page2Div = document.getElementById('page-2');
+            const p2Visual = document.getElementById('page2VisualText');
+            const p2Desc = document.getElementById('page2DescriptionText');
+            const p2Shield = document.getElementById('page2ShieldSvg');
+            if(page2Div) page2Div.classList.remove('trapped-state', 'locked');
+            if(p2Visual) p2Visual.classList.remove('trapped', 'locked');
+            if(p2Desc) p2Desc.classList.remove('trapped', 'locked');
+            if(p2Shield) p2Shield.classList.remove('show-shield');
+
+
+            // Stop Page 3 animations
+            if (page3AnimationId) cancelAnimationFrame(page3AnimationId);
+            page3AnimationId = null;
+            const svg = document.getElementById('calculationSvg');
+            if (svg) svg.innerHTML = ''; // Clear calculation SVG content
+        }
+
+        function showPage(index) {
+            if (index < 0 || index >= pageCount) return;
+
+            stopAllPageAnimations(); // Stop animations on the current page
+
+            pages.forEach((page, i) => {
+                page.classList.toggle('active', i === index);
+            });
+
+            currentPageIndex = index;
+            pageSelect.value = index; // Update dropdown
+
+            // Update button states
+            prevBtn.disabled = (index === 0);
+            nextBtn.disabled = (index === pageCount - 1);
+
+            // --- Trigger animations for the NEW active page ---
+            if (index === 1) { // Page 1: PANIC
+                startPage1Animation();
+            } else if (index === 2) { // Page 2: PROTECT
+                startPage2Animation();
+            } else if (index === 3) { // Page 3: CALCULATION
+                startPage3Animation();
+            }
+        }
+
+        // --- Page 1: PANIC Animation ---
+        function startPage1Animation() {
+            const page1Div = document.getElementById('page-1');
+            if (!page1Div) return;
+            let isWhite = false;
+            page1BgInterval = setInterval(() => {
+                isWhite = !isWhite;
+                page1Div.style.backgroundColor = isWhite ? '#FFFFFF' : '#000000';
+            }, 400); // Match original flash speed
+        }
+
+        // --- Page 2: PROTECT Animation ---
+        function startPage2Animation() {
+            const p2Visual = document.getElementById('page2VisualText');
+            const p2Desc = document.getElementById('page2DescriptionText');
+            const p2Shield = document.getElementById('page2ShieldSvg');
+            const page2Div = document.getElementById('page-2');
+            if (!p2Visual || !p2Desc || !p2Shield || !page2Div) return;
+
+            // Reset classes if re-entering page
+            page2Div.classList.remove('trapped-state', 'locked');
+            p2Visual.classList.remove('trapped', 'locked');
+            p2Desc.classList.remove('trapped', 'locked');
+            p2Shield.classList.remove('show-shield');
+
+            const initialDelay = 4500;
+            const doorAnimDurationCss = getComputedStyle(document.documentElement).getPropertyValue('--page2-door-anim-duration');
+            const doorAnimDurationMs = (parseFloat(doorAnimDurationCss) || 1.5) * 1000;
+            const lockDelay = initialDelay + doorAnimDurationMs - 300;
+            const shieldAppearDelay = initialDelay + doorAnimDurationMs + 200;
+
+            page2ActivateTrapTimer = setTimeout(() => {
+                page2Div.classList.add('trapped-state');
+                p2Visual.classList.add('trapped');
+                p2Desc.classList.add('trapped');
+            }, initialDelay);
+
+            page2LockStateTimer = setTimeout(() => {
+                page2Div.classList.add('locked');
+                p2Visual.classList.add('locked');
+                p2Desc.classList.add('locked');
+            }, lockDelay);
+
+            page2ShowShieldTimer = setTimeout(() => {
+                p2Shield.style.transitionDelay = '0s';
+                p2Shield.classList.add('show-shield');
+            }, shieldAppearDelay);
+        }
+
+        // --- Page 3: CALCULATION Animation ---
+        function startPage3Animation() {
+            const svg = document.getElementById('calculationSvg');
+            if (!svg) return;
+            svg.innerHTML = ''; // Clear previous drawing
+            const viewBox = svg.viewBox.baseVal;
+            if (!viewBox) return; // Exit if viewBox not ready
+
+            let elements = [];
+            let startTime = null;
+            const animationDuration = 12000; // ms
+            const svgNS = "http://www.w3.org/2000/svg";
+
+            const computedStyle = getComputedStyle(document.documentElement);
+            const accentColor = computedStyle.getPropertyValue('--page3-accent-color').trim() || '#63b3ed';
+            const glitchColor = computedStyle.getPropertyValue('--page3-glitch-color').trim() || '#f56565';
+
+
+            function random(min, max) { return Math.random() * (max - min) + min; }
+            function createSvgElement(type) {
+                const el = document.createElementNS(svgNS, type);
+                if (svg) { svg.appendChild(el); } else { return null; }
+                return el;
+            }
+
+            function addCalculationElement() {
+                 if (elements.length > 50) return;
+                 const type = Math.random() > 0.6 ? 'text' : (Math.random() > 0.5 ? 'circle' : 'rect');
+                 const x = random(viewBox.width * 0.1, viewBox.width * 0.9);
+                 const y = random(viewBox.height * 0.1, viewBox.height * 0.9);
+                 const maxLife = random(2000, 5000);
+                 let el;
+                 // Create element... (condensed for brevity - same logic as before)
+                 if (type === 'text') { el = createSvgElement('text'); if (!el) return; const fragments = ["P(Success)=Low%", "Risk: High", "Rule_1->FAIL", "Option C?", "VAR_X", "T-minus?", "CALC...", "ERR:", "ALT_ROUTE?", "IMPOSSIBLE"]; el.textContent = fragments[Math.floor(random(0, fragments.length))]; el.setAttribute('x', x); el.setAttribute('y', y); }
+                 else if (type === 'circle') { el = createSvgElement('circle'); if (!el) return; el.setAttribute('cx', x); el.setAttribute('cy', y); el.setAttribute('r', random(3, 8)); }
+                 else { el = createSvgElement('rect'); if (!el) return; const size = random(5, 15); el.setAttribute('x', x - size / 2); el.setAttribute('y', y - size / 2); el.setAttribute('width', size); el.setAttribute('height', size); }
+
+                 setTimeout(() => { if (el) { el.style.opacity = random(0.5, 0.9); } }, 10);
+                 elements.push({ el: el, type: type, x: x, y: y, vx: random(-0.2, 0.2), vy: random(-0.2, 0.2), life: maxLife, maxLife: maxLife });
+            }
+
+             function showCalculationResult() {
+                const resultDot = createSvgElement('circle'); if (!resultDot) return;
+                resultDot.setAttribute('cx', viewBox.width / 2); resultDot.setAttribute('cy', viewBox.height / 2);
+                resultDot.setAttribute('r', 3); resultDot.classList.add('result-dot');
+                setTimeout(() => { if (resultDot) { resultDot.style.opacity = 1; } }, 10);
+            }
+
+            function calculationLoop(timestamp) {
+                if (!svg || !document.contains(svg)) { cancelAnimationFrame(page3AnimationId); page3AnimationId = null; return; } // Stop if SVG removed
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+
+                elements = elements.filter(item => {
+                    if (!item || !item.el || !svg.contains(item.el)) return false; // Cleanup check
+                    item.x += item.vx; item.y += item.vy;
+                    if (item.x < 0 || item.x > viewBox.width) item.vx *= -1; if (item.y < 0 || item.y > viewBox.height) item.vy *= -1;
+                    try { if (item.type === 'text') { item.el.setAttribute('x', item.x); item.el.setAttribute('y', item.y); } else if (item.type === 'circle') { item.el.setAttribute('cx', item.x); item.el.setAttribute('cy', item.y); } else { const size = parseFloat(item.el.getAttribute('width')); item.el.setAttribute('x', item.x - size / 2); item.el.setAttribute('y', item.y - size / 2); } } catch (e) { console.error("SVG Attr Err:", e); }
+                    item.life -= 16;
+                    const opacity = Math.min(0.9, (item.life / item.maxLife) * 2); if (item.el) item.el.style.opacity = opacity;
+                    if (Math.random() < 0.005 && item.el) { item.el.style.fill = glitchColor; item.el.style.stroke = glitchColor; setTimeout(() => { if (item.el && svg.contains(item.el)) { item.el.style.fill = item.type === 'text' ? accentColor : 'none'; item.el.style.stroke = item.type !== 'text' ? accentColor : 'none'; } }, 100); }
+                    if (item.life <= 0) { try { svg.removeChild(item.el); } catch (e) {} return false; }
+                    return true;
+                });
+
+                if (elapsed < animationDuration && Math.random() < 0.1) { addCalculationElement(); }
+
+                if (elapsed < animationDuration) { page3AnimationId = requestAnimationFrame(calculationLoop); }
+                else { elements.forEach(item => { if (item && item.el && svg.contains(item.el)) { try { svg.removeChild(item.el); } catch (e) {} } }); elements = []; showCalculationResult(); page3AnimationId = null; }
+            }
+            // Start
+            page3AnimationId = requestAnimationFrame(calculationLoop);
+        }
+
+
+        // --- Event Listeners ---
+        prevBtn.addEventListener('click', () => showPage(currentPageIndex - 1));
+        nextBtn.addEventListener('click', () => showPage(currentPageIndex + 1));
+        homeBtn.addEventListener('click', () => showPage(0));
+        pageSelect.addEventListener('change', (e) => showPage(parseInt(e.target.value)));
+        learnRulesBtn.addEventListener('click', () => showPage(1)); // Link button to Page 1
+
+        // --- Initial Page Load ---
+        showPage(0); // Show homepage initially
+
+    </script>
+
+</body>
+</html>
