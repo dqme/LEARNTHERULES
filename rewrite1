@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEARNTHERULES - Web Comic (V2.2)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Creepster&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* --- Global Styles --- */
+        :root {
+             --page2-transition-duration: 1.5s;
+             --page2-bar-anim-duration: 0.8s; /* Faster bar animation */
+             --page2-shield-delay: calc(var(--page2-bar-anim-duration) + 0.5s); /* Shield appears after bars */
+             --page3-calc-step-duration: 300ms; /* Delay between calc steps */
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; color: #F3F4F6; margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; background-color: #111827; }
+        .page-content { display: none; flex-grow: 1; width: 100%; min-height: calc(100vh - 4rem); display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; padding: 1rem; position: relative; }
+        .page-content.active { display: flex; }
+        nav { height: 4rem; background-color: #1f2937; color: #e5e7eb; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10; flex-shrink: 0; }
+        nav button, nav select { background-color: #4b5563; color: #e5e7eb; border: none; padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer; transition: background-color 0.2s; font-weight: bold; }
+        nav button:hover, nav select:hover { background-color: #6b7280; }
+        nav button:disabled { background-color: #374151; cursor: not-allowed; opacity: 0.6; }
+        nav select { margin: 0 1rem; background-color: #4b5563; border-right: 8px solid transparent; -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23e5e7eb" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 11.293l-4.646-4.647a.5.5 0 0 1 .708-.708L8 9.879l4.938-4.937a.5.5 0 0 1 .708.708L8 11.293z"/></svg>'); background-repeat: no-repeat; background-position: right 0.5rem center; padding-right: 2rem; }
+        .nav-title { font-weight: 900; font-size: 1.25rem; text-transform: uppercase; }
+
+        /* --- Utility --- */
+        .hidden-initially { opacity: 0; } /* For elements faded in by JS */
+
+        /* --- Page Specific Styles --- */
+
+        /* === Homepage Styles === */
+        #page-home { background: linear-gradient(270deg, #111827, #1f2937, #111827); background-size: 600% 600%; animation: slowGradientShift 25s ease infinite; justify-content: center; }
+        @keyframes slowGradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        #page-home .warning-icon, #page-home .section-icon { width: 1.5rem; height: 1.5rem; display: inline-block; margin-right: 0.5rem; vertical-align: middle; } #page-home .section-icon { color: #9ca3af; vertical-align: bottom; }
+
+        /* === Page 1 Styles (PANIC - V2.2 Aesthetics) === */
+        #page-1 {
+            background-color: #050505; /* Even darker */
+            position: relative; overflow: hidden;
+        }
+        /* Background: Static noise + Red Pulse */
+        #page-1::before { /* Noise */
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; pointer-events: none;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCI+PHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjMDAwIj48L3JlY3Q+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjMjIyIj48L3JlY3Q+PHJlY3QgeD0iMjAiIHk9IjUiIHdpZHRoPSI1IiBoZWlnaHQ9IjUiIGZpbGw9IiMxMTYiPjwvcmVjdD48cmVjdCB4PSIzMCIgeT0iMjAiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IiMyMjIiPjwvcmVjdD48cmVjdCB4PSIxNSIgeT0iMzUiIHdpZHRoPSIzIiBoZWlnaHQ9IjMiIGZpbGw9IiMxMTYiPjwvcmVjdD48L3N2Zz4=');
+            opacity: 0.04; animation: page1_noiseAnim 0.2s steps(2, start) infinite; z-index: 0;
+        }
+        #page-1::after { /* Red Pulse */
+            content: ''; position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; pointer-events: none;
+            background: radial-gradient(ellipse at center, rgba(153, 27, 27, 0.3) 0%, rgba(153, 27, 27, 0) 70%);
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0;
+            animation: page1_redPulse 2.5s ease-out infinite;
+            z-index: 1;
+        }
+        @keyframes page1_noiseAnim { 0% { transform: translate(0,0); } 10% { transform: translate(-2%,-3%); } 30% { transform: translate(3%,1%); } 50% { transform: translate(-1%,-2%); } 70% { transform: translate(2%, 3%); } 100% { transform: translate(0,0); } }
+        @keyframes page1_redPulse { 0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); } 50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.2); } }
+
+        #page-1 .description-paragraph {
+            font-weight: 700; color: #dc2626; /* Blood red */
+            /* White glow for contrast */
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6), 0 0 12px rgba(255, 255, 255, 0.4);
+            line-height: 1.7; position: relative; z-index: 2;
+            animation: page1_textShakeIntense 0.15s linear infinite alternate; /* Keep intense shake */
+        }
+        @keyframes page1_textShakeIntense { /* Intense shake */
+            0% { transform: translate(1.5px, 1px) rotate(0.3deg); } 25% { transform: translate(-1px, -1.5px) rotate(-0.2deg); }
+            50% { transform: translate(1px, 1.5px) rotate(-0.3deg); } 75% { transform: translate(-1.5px, -1px) rotate(0.2deg); }
+            100% { transform: translate(1.5px, 1px) rotate(0.3deg); }
+        }
+        #page-1 .rule-text {
+            font-family: 'Creepster', cursive; font-size: 6rem; text-align: center; line-height: 1.1;
+            margin-top: 2rem; position: relative; z-index: 2;
+            color: #fecaca; /* Lighter red */
+            /* Distortion via text-shadow and slight transform */
+            text-shadow: 2px 2px 0px rgba(153, 27, 27, 0.7), -2px -2px 0px rgba(59, 130, 246, 0.7), 0 0 15px #000;
+            animation: page1_ruleDistort 0.1s linear infinite alternate;
+        }
+        @keyframes page1_ruleDistort {
+             0% { transform: skewX(-2deg) translate(1px, -1px); opacity: 0.9; }
+             100% { transform: skewX(2deg) translate(-1px, 1px); opacity: 1; }
+        }
+        #page-1 .rule-text::before, #page-1 .rule-text::after { content: none; } /* Ensure no pseudo elements */
+
+
+        /* === Page 2 Styles (PROTECT - V2.2 Aesthetics) === */
+        #page-2 {
+            --page2-bg-color-start: #450a0a; --page2-bg-color-end: #7f1d1d;
+            --page2-crack-color: rgba(0, 0, 0, 0.7); --page2-crack-width: 2px;
+            background: linear-gradient(45deg, var(--page2-bg-color-start), var(--page2-bg-color-end));
+            background-size: 400% 400%; animation: page2_gradientShift 15s ease infinite alternate;
+            position: relative; transition: background 0.5s ease-out;
+        }
+        @keyframes page2_gradientShift { 0%{background-position:0% 50%} 100%{background-position:100% 50%} }
+        /* Animated Cracks */
+        #page-2 .crack-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; pointer-events: none; }
+        #page-2 .crack { stroke: var(--page2-crack-color); stroke-width: var(--page2-crack-width); fill: none; stroke-dasharray: 1000; stroke-dashoffset: 1000; transition: stroke-dashoffset 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
+        #page-2.trapped-state .crack { stroke-dashoffset: 0; }
+        /* Description */
+        #page-2 .description-paragraph { font-weight:700; color:#bee3f8; /* Lighter blue */ text-shadow:1px 1px 3px rgba(0,0,0,.9); transition: color var(--page2-transition-duration) ease-out; line-height:1.7; position:relative; z-index:1 }
+        #page-2 .description-paragraph.trapped { color:#f87171; animation:page2_jitterText .2s linear infinite }
+        @keyframes page2_jitterText { 0%,100%{transform:translate(.5px, -.5px)} 50%{transform:translate(-.5px, .5px)} }
+        /* Visual Area */
+        #page-2 .visual-element { display:flex; flex-grow:1; justify-content:center; align-items:center; width:100%; position:relative }
+        #page-2 .protect-text {
+            font-family:'Archivo Black', sans-serif; font-size:5rem; text-align:center; line-height:1.1;
+            color:#90cdf4; /* Base blue */ text-shadow:0 0 10px rgba(0,0,0,.7);
+            margin-top:1rem; position:relative; z-index: 2; /* Above cracks */
+            animation:page2_breathe 4s infinite ease-in-out;
+            transition:color var(--page2-transition-duration) ease-out, transform 0.3s ease-in-out;
+        }
+        @keyframes page2_breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.02)} }
+        #page-2 .protect-text.trapped {
+            color:#e53e3e; /* Brighter Red */
+            animation: page2_shakeIntense .1s infinite linear alternate;
+            transform: scale(0.95); /* Slightly shrink when trapped */
+        }
+        @keyframes page2_shakeIntense { 0%{transform:translate(2px, 1.5px) rotate(.5deg) scale(0.95)} 25%{transform:translate(-1.5px, -2px) rotate(-.5deg) scale(0.95)} 50%{transform:translate(1.5px, 2px) rotate(.5deg) scale(0.95)} 75%{transform:translate(-2px, -1.5px) rotate(-.5deg) scale(0.95)} 100%{transform:translate(2px, 1.5px) rotate(.5deg) scale(0.95)} }
+        /* Cage Bars using Pseudo-elements */
+        #page-2 .protect-text::before,
+        #page-2 .protect-text::after {
+            content: ''; position: absolute; background-color: rgba(10, 10, 10, 0.7); /* Dark semi-transparent bars */
+            box-shadow: 0 0 8px rgba(0,0,0,0.8); border-radius: 2px;
+            z-index: 3; /* Above text */ transition: transform var(--page2-bar-anim-duration) cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Ease with overshoot */
+        }
+        /* Vertical Bars (Initially off-screen) */
+        #page-2 .protect-text::before { top: -10%; height: 120%; width: 25px; left: 0; transform: translateX(-150%); }
+        #page-2 .protect-text::after { top: -10%; height: 120%; width: 25px; right: 0; transform: translateX(150%); }
+        /* Bring bars in when trapped */
+        #page-2 .protect-text.trapped::before { transform: translateX(calc(50% - 12.5px - 30px)); } /* Position left bar */
+        #page-2 .protect-text.trapped::after { transform: translateX(calc(-50% + 12.5px + 30px)); } /* Position right bar */
+
+        /* Broken Shield */
+        #page-2 .broken-shield { position:absolute; width:100px; height:120px; top:50%; left:50%; transform:translate(-50%, -50%) scale(.5); z-index:4; /* Above bars */ opacity:0; pointer-events:none; transition:opacity 1s ease-out var(--page2-shield-delay); }
+        #page-2 .broken-shield.show-shield { opacity:1; transform:translate(-50%, -50%) scale(1) }
+
+
+        /* === Page 3 Styles (CALCULATION - Revised Aesthetics) === */
+        #page-3 { --page3-bg-color-center: #1a202c; --page3-bg-color-outer: #4c1d95; --page3-text-color: #fff; --page3-accent-color: #63b3ed; --page3-glitch-color: #f56565; background:radial-gradient(ellipse at center, var(--page3-bg-color-center) 0%, var(--page3-bg-color-outer) 100%); background-size:200% 200%; animation:page3_vortexBackground 25s cubic-bezier(.25,.1,.25,1) infinite alternate; position:relative }
+        @keyframes page3_vortexBackground { 0%{background-position:center center;background-size:250% 250%} 100%{background-position:center center;background-size:100% 100%} }
+        #page-3 .description-paragraph { font-weight:700; color:var(--page3-text-color); text-shadow: 0 0 5px rgba(0,0,0,0.9); /* Stronger shadow */ line-height:1.6; letter-spacing:-.025em; position:relative; z-index:1; opacity:0; animation:page3_fadeInDesc 2s ease-out .5s forwards }
+        @keyframes page3_fadeInDesc { to{opacity:1} }
+        #page-3 .visual-element { display:flex; flex-grow:1; justify-content:center; align-items:center; width:100%; max-width:600px; position:relative }
+        #page-3 #calculationSvg { width:100%; height:100%; min-height:300px; overflow:visible }
+        /* Styles for pre-defined SVG groups/elements */
+        #page-3 #calculationSvg .calc-group { opacity: 0; transform: scale(0.8) translate(0, 10px); transition: opacity 0.4s ease-out, transform 0.4s ease-out; }
+        #page-3 #calculationSvg .calc-group.visible { opacity: 0.8; transform: scale(1) translate(0, 0); }
+        #page-3 #calculationSvg .calc-line { stroke: var(--page3-accent-color); stroke-width: 0.5px; stroke-dasharray: 2 2; }
+        #page-3 #calculationSvg .calc-shape { stroke: var(--page3-accent-color); stroke-width: 1px; fill: none; }
+        #page-3 #calculationSvg .calc-text { font-family:'Inter', sans-serif; font-size:10px; font-weight:700; fill:var(--page3-accent-color); text-anchor:middle; }
+        #page-3 #calculationSvg .result-dot { fill:#fff; stroke:none; filter:drop-shadow(0 0 5px #fff) drop-shadow(0 0 10px #fff); opacity:0; transition:opacity 1s ease-in-out 0.5s; /* Delay appearance */ }
+         #page-3 #calculationSvg .result-dot.visible { opacity: 1; }
+
+
+        /* === Page 4 Styles (EXECUTION - Placeholder Styles) === */
+        #page-4 { background-color: #111; }
+        #page-4 .description-paragraph { font-weight: 700; color: #fff; text-shadow: 1px 1px 3px rgba(220, 38, 38, 0.7); line-height: 1.6; letter-spacing: -0.025em; position: relative; z-index: 1; opacity: 1; }
+        #page-4 .visual-element { display:flex; flex-grow:1; justify-content:center; align-items:center; width:100%; max-width:600px; position:relative }
+        #page-4 #executionSvg { width:100%; height:100%; min-height:300px; overflow:visible; border: 1px dashed gray; } /* Placeholder border */
+
+
+        /* === Responsive Styles === */
+        @media (max-width: 768px) {
+            #page-1 .rule-text, #page-2 .protect-text { font-size: 4rem; }
+            #page-1 .description-paragraph, #page-2 .description-paragraph, #page-3 .description-paragraph, #page-4 .description-paragraph { font-size: 1rem; }
+            #page-2 .broken-shield { width: 80px; height: 100px; }
+            #page-3 #calculationSvg .calc-text { font-size: 8px; }
+        }
+        @media (max-width: 480px) {
+             #page-1 .rule-text, #page-2 .protect-text { font-size: 3rem; }
+            #page-1 .description-paragraph, #page-2 .description-paragraph, #page-3 .description-paragraph, #page-4 .description-paragraph { font-size: 0.9rem; }
+            #page-2 .broken-shield { width: 60px; height: 80px; }
+            #page-3 #calculationSvg .calc-text { font-size: 7px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <span class="nav-title">LEARNTHERULES</span>
+        <div>
+            <button id="homeBtn">Home</button>
+            <select id="pageSelect" aria-label="Select Page">
+                <option value="0">Homepage</option>
+                <option value="1">Page 1: PANIC</option>
+                <option value="2">Page 2: PROTECT</option>
+                <option value="3">Page 3: CALCULATION</option>
+                <option value="4">Page 4: EXECUTION</option>
+            </select>
+            <button id="prevBtn" disabled>Previous</button>
+            <button id="nextBtn">Next</button>
+        </div>
+    </nav>
+
+    <main id="pageContainer" class="flex-grow">
+        <div id="page-home" class="page-content active">
+             <div class="container mx-auto p-6 md:p-8 max-w-4xl text-center"> <div class="mb-10"> <h1 class="text-4xl md:text-5xl font-black text-white uppercase tracking-wider mb-2"> LEARNTHERULES </h1> <p class="text-lg text-gray-400">Win or lose, the city takes its cut.</p> </div> <div class="warning-section bg-yellow-500 border-l-4 border-yellow-700 text-yellow-900 p-4 rounded-md shadow-lg mb-10 mx-auto max-w-2xl" role="alert"> <p class="font-bold flex items-center justify-center"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="warning-icon"> <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" /> </svg> Content Warning </p> <p>This story contains flashing lights, potentially intense graphics, and mature themes. Viewer discretion is advised.</p> </div> <div class="intro-section mb-12 bg-gray-800/50 backdrop-blur-sm p-8 rounded-lg shadow-xl mx-auto max-w-3xl"> <h2 class="text-2xl md:text-3xl font-bold mb-4 text-red-500">Welcome</h2> <p class="text-base md:text-lg leading-relaxed text-gray-300 mb-6"> Rain slicked chrome and desperation. In this city, the rules are etched in flickering neon and paid for in blood. Follow one runner's descent into a night where every choice shreds the code he lived by. Think you know the rules? Think again. </p> <button id="learnRulesBtn" class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1 text-lg"> LEARN THE RULES </button> </div> <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto"> <div class="placeholder-section bg-gray-800 p-6 rounded-lg shadow-lg text-left hover:bg-gray-700 transition duration-300"> <h3 class="text-xl font-bold mb-3 text-gray-200 flex items-center"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="section-icon"> <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /> </svg> About </h3> <p class="text-gray-400 text-sm">The story, the world, the madness behind it. (Coming Soon)</p> </div> <div class="placeholder-section bg-gray-800 p-6 rounded-lg shadow-lg text-left hover:bg-gray-700 transition duration-300"> <h3 class="text-xl font-bold mb-3 text-gray-200 flex items-center"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="section-icon"> <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /> </svg> Characters </h3> <p class="text-gray-400 text-sm">Dossiers on the players in this neon nightmare. (Coming Soon)</p> </div> <div class="placeholder-section bg-gray-800 p-6 rounded-lg shadow-lg text-left hover:bg-gray-700 transition duration-300"> <h3 class="text-xl font-bold mb-3 text-gray-200 flex items-center"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="section-icon"> <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /> </svg> Glossary </h3> <p class="text-gray-400 text-sm">Decoding the chrome slang and street tech. (Coming Soon)</p> </div> </div>
+            </div>
+        </div>
+
+        <div id="page-1" class="page-content">
+            <div class="description-wrapper max-w-2xl text-center mb-8 px-4">
+                <p class="description-paragraph text-lg md:text-xl">
+                    Wet asphalt hissed. Five figures materialized from the smog and rain, blocking the alley. Predator optics flared. He shoved the girl – *collateral* – behind him. Adrenaline surged, overriding the ingrained protocols. Training screamed one thing, instinct another. The primary directive glitching in his wetware:
+                </p>
+            </div>
+            <div class="visual-element flex-grow flex items-center justify-center w-full px-4">
+                 <h1 class="rule-text" data-text="RULE 1: ALWAYS AVOID A FIGHT">RULE 1: ALWAYS AVOID A FIGHT</h1>
+            </div>
+        </div>
+
+        <div id="page-2" class="page-content">
+             <svg class="crack-overlay" id="page2CrackSvg" preserveAspectRatio="none"></svg>
+            <div class="description-wrapper max-w-3xl text-center mb-10 px-4 mx-auto">
+                <p id="page2DescriptionText" class="description-paragraph text-lg md:text-xl leading-relaxed">
+                    Rule 1 dissolved in a spray of gutter water. Close-quarters. Bone jarring impacts echoed off damp walls. His chrome fist found cheap plasteel, another found flesh. Combat subroutines optimized, predicting, countering. Two down. A flicker of an escape route in the rain-streaked alley... then a choked cry. The third shadow, the forgotten variable, had the girl. Static filled his audio receptors. A blade pressed against her neck. System override. Trapped.
+                </p>
+            </div>
+            <div class="visual-element">
+                <h1 id="page2VisualText" class="protect-text">PROTECT AT ALL COSTS</h1>
+                <svg id="page2ShieldSvg" class="broken-shield" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 0 L10 25 V65 C10 95 50 120 50 120 C50 120 90 95 90 65 V25 L50 0 Z" fill="#718096" stroke="#2d3748" stroke-width="3"/><path d="M45 50 L25 75" stroke="#2d3748" stroke-width="4" stroke-linecap="round"/><path d="M55 45 L75 70 L60 95" stroke="#2d3748" stroke-width="4" stroke-linecap="round"/><path d="M50 0 L50 60 L30 80" stroke="#2d3748" stroke-width="3" stroke-linecap="round"/></svg>
+            </div>
+        </div>
+
+        <div id="page-3" class="page-content">
+            <div class="description-wrapper max-w-3xl text-center mb-8 px-4 mx-auto">
+                <p id="page3DescriptionText" class="description-paragraph text-lg md:text-xl">
+                    Input: Hostage. Output: Failure. Sensory data narrowed – the tremor in her hand, the pressure of the blade, the rival gang tats on the captor's knuckles. Tactical overlays flickered, probabilities cascading. Rule 1: Void. Rule 'Protect': Compromised. Logic cores spun, seeking non-standard deviations. A new pathway illuminated in the mental architecture. Cold. Efficient. High-risk. Calculation complete.
+                </p>
+            </div>
+            <div class="visual-element">
+                <svg id="calculationSvg" viewBox="0 0 300 200" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <g id="calcGroup1" class="calc-group hidden-initially">
+                        <line class="calc-line" x1="50" y1="50" x2="100" y2="100"/>
+                        <circle class="calc-shape" cx="50" cy="50" r="5"/>
+                        <text class="calc-text" x="75" y="75">P(S)=Lo</text>
+                    </g>
+                     <g id="calcGroup2" class="calc-group hidden-initially">
+                        <rect class="calc-shape" x="150" y="30" width="20" height="10"/>
+                        <line class="calc-line" x1="160" y1="40" x2="120" y2="80"/>
+                        <text class="calc-text" x="140" y="60">Rsk:Hi</text>
+                    </g>
+                     <g id="calcGroup3" class="calc-group hidden-initially">
+                        <line class="calc-line" x1="200" y1="150" x2="250" y2="120"/>
+                        <line class="calc-line" x1="200" y1="150" x2="180" y2="110"/>
+                        <text class="calc-text" x="215" y="135">R1_FAIL</text>
+                        <circle class="calc-shape" cx="180" cy="110" r="3"/>
+                    </g>
+                    <g id="calcGroup4" class="calc-group hidden-initially">
+                        <text class="calc-text" x="80" y="160">ALT?</text>
+                        <rect class="calc-shape" x="70" y="150" width="20" height="20" transform="rotate(15 80 160)"/>
+                    </g>
+                     <g id="calcGroup5" class="calc-group hidden-initially">
+                        <text class="calc-text" x="220" y="60">ERR:</text>
+                         <line class="calc-line" x1="210" y1="50" x2="230" y2="70"/>
+                         <line class="calc-line" x1="210" y1="70" x2="230" y2="50"/>
+                    </g>
+                    <circle id="calcResultDot" class="result-dot hidden-initially" cx="150" cy="100" r="4"/>
+                </svg>
+            </div>
+        </div>
+
+        <div id="page-4" class="page-content">
+            <div class="description-wrapper max-w-3xl text-center mb-8 px-4 mx-auto">
+                <p id="page4DescriptionText" class="description-paragraph text-lg md:text-xl">
+                    Execution vector locked. Target designated: not flesh, but failing infrastructure. A corroded support strut groaning under the weight of rain-heavy pipes. Micro-seconds stretched. Then: explosive force. Not attack, but *applied physics*. He hit the strut low and hard. Metal screamed. Gravity answered. Rust, pipe-shards, and filthy water cascaded down, obscuring everything in a sudden, brutal curtain.
+                </p>
+            </div>
+            <div class="visual-element">
+                <svg id="executionSvg" viewBox="0 0 300 200" preserveAspectRatio="xMidYMid meet"></svg>
+                 <p class="text-gray-500 italic">(Scene 4 Visuals To Be Implemented)</p>
+            </div>
+        </div>
+        </main>
+
+    <script>
+        /**
+         * LEARNTHERULES Web Comic Navigation and Animation Script v2.2
+         * - Revised Scenes 1 & 2 Aesthetics and Implementation
+         * - Revised Scene 3 Implementation (Pre-defined SVG)
+         * - Rewritten Dialogue
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Elements ---
+            const pages = document.querySelectorAll('.page-content');
+            const pageSelect = document.getElementById('pageSelect');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const homeBtn = document.getElementById('homeBtn');
+            const learnRulesBtn = document.getElementById('learnRulesBtn');
+            const pageCount = pages.length;
+            let currentPageIndex = 0;
+
+            // --- Animation State Variables ---
+            let page1RuleTextEl = document.querySelector('#page-1 .rule-text');
+            let page2ActivateTrapTimer = null;
+            let page2ShowShieldTimer = null;
+            // Removed page2ConstrictionAnimationId as it's CSS driven now
+            let page3Timeouts = []; // Store timeouts for staggered animation
+            let page4AnimationId = null; // Placeholder
+
+            // --- SVG Namespace ---
+            const svgNS = "http://www.w3.org/2000/svg";
+
+            // --- Utility: Stop All Page-Specific Animations ---
+            function stopAllPageAnimations() {
+                // console.log("Stopping all animations..."); // Debug
+                try {
+                    // Stop Page 1: (CSS driven) Reset if needed
+                    const page1Div = document.getElementById('page-1');
+
+                    // Stop Page 2: Timers and reset classes/styles
+                    clearTimeout(page2ActivateTrapTimer); page2ActivateTrapTimer = null;
+                    clearTimeout(page2ShowShieldTimer); page2ShowShieldTimer = null;
+                    const page2Div = document.getElementById('page-2'); const p2Visual = document.getElementById('page2VisualText'); const p2Desc = document.getElementById('page2DescriptionText'); const p2Shield = document.getElementById('page2ShieldSvg'); const p2Cracks = document.getElementById('page2CrackSvg');
+                    if(page2Div) page2Div.classList.remove('trapped-state');
+                    if(p2Visual) { p2Visual.classList.remove('trapped'); p2Visual.style.animation = ''; } // Remove shake/breathe
+                    if(p2Desc) p2Desc.classList.remove('trapped');
+                    if(p2Shield) p2Shield.classList.remove('show-shield');
+                    if(p2Cracks) p2Cracks.innerHTML = ''; // Clear generated cracks
+
+                    // Stop Page 3: Clear timeouts and reset SVG element classes
+                    page3Timeouts.forEach(clearTimeout); page3Timeouts = [];
+                    const svg3 = document.getElementById('calculationSvg');
+                    if (svg3) {
+                        svg3.querySelectorAll('.calc-group').forEach(g => g.classList.remove('visible'));
+                        const resultDot = svg3.querySelector('.result-dot');
+                        if(resultDot) resultDot.classList.remove('visible');
+                    }
+
+                    // Stop Page 4: Placeholder
+                    if (page4AnimationId) cancelAnimationFrame(page4AnimationId); page4AnimationId = null;
+                    const svg4 = document.getElementById('executionSvg'); if (svg4) svg4.innerHTML = '';
+
+                } catch (error) { console.error("Error in stopAllPageAnimations:", error); }
+            }
+
+            // --- Core Navigation Function ---
+            function showPage(index) {
+                // console.log(`Attempting to show page: ${index}`); // Debug
+                if (index < 0 || index >= pageCount || !pages[index]) { console.error(`Invalid page index requested: ${index}`); if(pageSelect) pageSelect.value = currentPageIndex; return; }
+                stopAllPageAnimations(); // Stop before switching
+                pages.forEach((page, i) => { page.classList.toggle('active', i === index); });
+                currentPageIndex = index;
+                if (pageSelect) pageSelect.value = index; if (prevBtn) prevBtn.disabled = (index === 0); if (nextBtn) nextBtn.disabled = (index === pageCount - 1);
+                // Start relevant animation
+                try {
+                    // console.log(`Starting animations for page ${index}`); // Debug
+                    if (index === 1) { startPage1Animation(); }
+                    else if (index === 2) { startPage2Animation(); }
+                    else if (index === 3) { startPage3Animation(); }
+                    // else if (index === 4) { startPage4Animation(); } // Page 4 disabled
+                } catch (error) { console.error(`Error starting animation script for page ${index}:`, error); }
+                // console.log(`Successfully shown page: ${index}`); // Debug
+            }
+
+            // --- Page-Specific Animation Start Functions ---
+
+            /** Page 1: PANIC - Revised CSS Driven */
+            function startPage1Animation() {
+                // console.log("Starting Page 1 Animation"); // Debug
+                 if (!page1RuleTextEl) page1RuleTextEl = document.querySelector('#page-1 .rule-text');
+                if (page1RuleTextEl && !page1RuleTextEl.getAttribute('data-text')) {
+                    page1RuleTextEl.setAttribute('data-text', page1RuleTextEl.textContent);
+                }
+                // Animations primarily handled by CSS when page is active
+            }
+
+            /** Page 2: PROTECT - Revised CSS Cage Bars */
+            function startPage2Animation() {
+                // console.log("Starting Page 2 Animation"); // Debug
+                const p2Visual = document.getElementById('page2VisualText');
+                const p2Desc = document.getElementById('page2DescriptionText');
+                const p2Shield = document.getElementById('page2ShieldSvg');
+                const page2Div = document.getElementById('page-2');
+                const crackSvg = document.getElementById('page2CrackSvg');
+
+                if (!p2Visual || !p2Desc || !p2Shield || !page2Div || !crackSvg) { console.error("Page 2 elements not found."); return; }
+
+                // Reset state
+                page2Div.classList.remove('trapped-state');
+                p2Visual.classList.remove('trapped');
+                p2Desc.classList.remove('trapped');
+                p2Shield.classList.remove('show-shield');
+                p2Visual.style.animation = 'page2_breathe 4s infinite ease-in-out'; // Start breathing
+                crackSvg.innerHTML = ''; // Clear previous cracks
+
+                // Generate initial cracks
+                setTimeout(() => {
+                    if(!page2Div.classList.contains('active')) return;
+                    const crackPaths = generateCrackPaths(crackSvg.clientWidth || 300, crackSvg.clientHeight || 200, 15);
+                    crackPaths.forEach(pathData => {
+                        if(!page2Div.classList.contains('active')) return;
+                        const path = document.createElementNS(svgNS, 'path'); path.setAttribute('d', pathData); path.classList.add('crack'); crackSvg.appendChild(path);
+                    });
+                }, 50);
+
+                const initialDelay = 3000; // Trap triggers faster
+                const shieldAppearDelay = initialDelay + (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--page2-bar-anim-duration')) || 0.8) * 1000 + 500; // Use bar anim duration + buffer
+
+                // Clear previous timers
+                clearTimeout(page2ActivateTrapTimer);
+                clearTimeout(page2ShowShieldTimer);
+
+                // Trigger trapped state (reveals cracks, changes text, adds shake, animates bars via CSS)
+                page2ActivateTrapTimer = setTimeout(() => {
+                    if(page2Div.classList.contains('active')) {
+                        page2Div.classList.add('trapped-state');
+                        p2Visual.classList.add('trapped');
+                        p2Desc.classList.add('trapped');
+                        p2Visual.style.animation = ''; // Remove breathe
+                        requestAnimationFrame(() => { if(p2Visual.classList.contains('trapped')) p2Visual.style.animation = 'page2_shakeIntense .1s infinite linear alternate'; });
+                    }
+                }, initialDelay);
+
+                // Show shield after bars animate
+                page2ShowShieldTimer = setTimeout(() => {
+                    if(page2Div.classList.contains('active') && p2Shield) {
+                        p2Shield.classList.add('show-shield');
+                    }
+                }, shieldAppearDelay);
+            }
+             // Helper for Page 2 Cracks
+            function generateCrackPaths(width, height, count) { /* ... (same as v2.1) ... */ if (width <= 0 || height <= 0) return []; const paths = []; for (let i = 0; i < count; i++) { let path = `M ${Math.random()*width} ${Math.random()*height}`; let segments = Math.floor(Math.random() * 3) + 2; for (let j = 0; j < segments; j++) { path += ` L ${Math.random()*width} ${Math.random()*height}`; } paths.push(path); } return paths; }
+
+
+            /** Page 3: CALCULATION - Pre-defined SVG Animation */
+            function startPage3Animation() {
+                // console.log("Starting Page 3 Animation"); // Debug
+                const svg = document.getElementById('calculationSvg');
+                if (!svg) { console.error("SVG container (#calculationSvg) not found for Page 3"); return; }
+
+                // Clear previous timeouts and reset element visibility
+                page3Timeouts.forEach(clearTimeout); page3Timeouts = [];
+                const groups = svg.querySelectorAll('.calc-group');
+                const resultDot = svg.querySelector('#calcResultDot');
+                groups.forEach(g => g.classList.remove('visible'));
+                if (resultDot) resultDot.classList.remove('visible');
+
+                const stepDuration = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--page3-calc-step-duration')) || 300;
+                let delay = 500; // Initial delay
+
+                // Stagger the appearance of each group
+                groups.forEach((group, index) => {
+                    const timeoutId = setTimeout(() => {
+                        if (document.getElementById('page-3')?.classList.contains('active')) { // Check page still active
+                            group.classList.add('visible');
+                        }
+                    }, delay + (index * stepDuration));
+                    page3Timeouts.push(timeoutId);
+                });
+
+                // Show the result dot after all groups have appeared
+                const resultDelay = delay + (groups.length * stepDuration) + 500; // Add buffer
+                const resultTimeoutId = setTimeout(() => {
+                     if (document.getElementById('page-3')?.classList.contains('active') && resultDot) {
+                         resultDot.classList.add('visible');
+                     }
+                }, resultDelay);
+                page3Timeouts.push(resultTimeoutId);
+            }
+
+
+            /** Page 4: EXECUTION - Placeholder/Disabled */
+            function startPage4Animation() {
+                 console.log("DEBUG: startPage4Animation called (currently disabled)");
+            }
+
+
+            // --- Event Listeners Setup ---
+            if (prevBtn) { prevBtn.addEventListener('click', () => showPage(currentPageIndex - 1)); }
+            else { console.error("Previous button not found"); }
+            if (nextBtn) { nextBtn.addEventListener('click', () => showPage(currentPageIndex + 1)); }
+            else { console.error("Next button not found"); }
+            if (homeBtn) { homeBtn.addEventListener('click', () => showPage(0)); }
+            else { console.error("Home button not found"); }
+            if (pageSelect) { pageSelect.addEventListener('change', (e) => { const selectedIndex = parseInt(e.target.value); if (!isNaN(selectedIndex)) { showPage(selectedIndex); } else { console.error("Invalid value selected:", e.target.value); } }); }
+            else { console.error("Page select dropdown not found"); }
+            if (learnRulesBtn) { learnRulesBtn.addEventListener('click', () => showPage(1)); }
+            else { console.error("Learn Rules button not found"); }
+
+            // --- Initial Page Load ---
+            showPage(0); // Show the homepage initially
+
+        }); // End DOMContentLoaded listener
+    </script>
+
+</body>
+</html>
