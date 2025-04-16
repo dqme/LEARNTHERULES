@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PANIC AGAINST DESIRED INTUITION</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS for animations and font */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #F3F4F6; /* Default text color (though less used now) */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center content vertically */
+            align-items: center; /* Center content horizontally */
+            overflow: hidden;
+            padding: 1rem; /* Add padding for spacing */
+            /* Background flashing animation */
+            animation: flashBackground 0.4s infinite steps(1, end);
+        }
+
+        /* Flashing background animation (Black to White) */
+        @keyframes flashBackground {
+            0% { background-color: #000000; }
+            50% { background-color: #FFFFFF; }
+            100% { background-color: #000000; }
+        }
+
+        /* --- Removed .scene-description styling --- */
+
+        /* Styling for the description paragraph itself */
+        .description-paragraph {
+            font-family: 'Inter', sans-serif; /* Keep readable font */
+            font-weight: 700; /* Bold */
+            color: #EF4444; /* Red color (text-red-500) */
+            /* Strong text shadow for visibility against black/white */
+            text-shadow: 0px 0px 4px black, 0px 0px 6px black;
+            /* Subtle shaking animation */
+            animation: shakeSubtle 0.3s infinite linear; /* Linear for constant subtle jitter */
+            /* Layout handled by Tailwind on the wrapper */
+            line-height: 1.7; /* Adjust line height for readability */
+        }
+
+        /* Keyframes for the subtle text shake */
+        @keyframes shakeSubtle {
+            0% { transform: translate(0.5px, 0.5px); }
+            25% { transform: translate(-0.5px, -0.5px); }
+            50% { transform: translate(0.5px, -0.5px); }
+            75% { transform: translate(-0.5px, 0.5px); }
+            100% { transform: translate(0.5px, 0.5px); }
+        }
+
+        /* Styling for the main rule text */
+        .rule-text {
+            font-family: 'Creepster', cursive;
+            font-size: 6rem;
+            text-align: center;
+            line-height: 1.1;
+            /* Original text flash/shake animations */
+            animation: flashNeurotic 0.2s infinite alternate, shake 0.1s infinite alternate;
+            /* Dark glow for visibility */
+            text-shadow: 0 0 5px #000, 0 0 10px #000, 0 0 15px #000, 0 0 20px #000;
+            margin-top: 2rem; /* Add some space above rule text */
+        }
+
+        /* Flashing text animation (Red to Black) */
+        @keyframes flashNeurotic {
+            0% { color: #DC2626; opacity: 1; }
+            49% { color: #DC2626; opacity: 1; }
+            50% { color: #000000; opacity: 0.8; }
+            100% { color: #000000; opacity: 0.8; }
+        }
+
+        /* Original shaking text animation */
+        @keyframes shake {
+             0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-0.5deg); }
+            20% { transform: translate(-2px, 0px) rotate(0.5deg); }
+            30% { transform: translate(2px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(0.5deg); }
+            50% { transform: translate(-1px, 2px) rotate(-0.5deg); }
+            60% { transform: translate(-2px, 1px) rotate(0deg); }
+            70% { transform: translate(2px, 1px) rotate(-0.5deg); }
+            80% { transform: translate(-1px, -1px) rotate(0.5deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-0.5deg); }
+        }
+
+        /* Responsive font size */
+        @media (max-width: 768px) {
+            .rule-text { font-size: 4rem; }
+            .description-paragraph { font-size: 1rem; } /* Adjust description size */
+        }
+        @media (max-width: 480px) {
+            .rule-text { font-size: 3rem; }
+            .description-paragraph { font-size: 0.9rem; } /* Adjust description size */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="description-wrapper max-w-2xl text-center mb-8 px-4"> <p class="description-paragraph text-lg md:text-xl"> Instinct screamed. He shoved her back—a fragile shield against the closing circle. Five shadows solidified into threats, leering, predatory. His breath hitched. Years of drills warred with the rising tide of adrenaline, a single, frantic thought surfacing through the chaos:
+        </p>
+    </div>
+
+    <div class="visual-element flex-grow flex items-start justify-center w-full px-4"> <h1 class="rule-text">
+            RULE 1: ALWAYS AVOID A FIGHT
+        </h1>
+    </div>
+
+</body>
+</html>
